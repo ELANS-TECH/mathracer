@@ -35,9 +35,9 @@ workflows:
       - name: Set build number
         script: |
           BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
-          cd ios/App
-          agvtool new-marketing-version 1.0
-          agvtool new-version -all $BUILD_NUMBER
+          echo "Setting build number to $BUILD_NUMBER"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" ios/App/App/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0" ios/App/App/Info.plist
       - name: Build iOS IPA
         script: |
           xcode-project build-ipa \
