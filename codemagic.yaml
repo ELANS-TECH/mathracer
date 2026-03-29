@@ -9,7 +9,7 @@ workflows:
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
-      node: v18
+      node: v22
       xcode: latest
       cocoapods: default
     scripts:
