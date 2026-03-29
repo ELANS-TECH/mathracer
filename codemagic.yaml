@@ -11,6 +11,7 @@ workflows:
       vars:
         XCODE_WORKSPACE: "ios/App/App.xcworkspace"
         XCODE_SCHEME: "App"
+        APP_STORE_ID: "com.amine.mathracer"
       node: v22
       xcode: latest
       cocoapods: default
@@ -31,6 +32,12 @@ workflows:
       - name: Set up code signing
         script: |
           xcode-project use-profiles
+      - name: Set build number
+        script: |
+          BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
+          cd ios/App
+          agvtool new-marketing-version 1.0
+          agvtool new-version -all $BUILD_NUMBER
       - name: Build iOS IPA
         script: |
           xcode-project build-ipa \
