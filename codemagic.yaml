@@ -9,7 +9,7 @@ workflows:
         distribution_type: app_store
         bundle_identifier: com.amine.mathracer
       vars:
-        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_WORKSPACE: "ios/App/App.xcodeproj"
         XCODE_SCHEME: "App"
         APP_STORE_ID: "com.amine.mathracer"
       node: v22
@@ -38,7 +38,7 @@ workflows:
       - name: Build iOS IPA
         script: |
           xcode-project build-ipa \
-            --workspace "$XCODE_WORKSPACE" \
+            --project "$XCODE_WORKSPACE" \
             --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
