@@ -13,7 +13,7 @@ workflows:
         XCODE_SCHEME: "App"
         APP_STORE_CONNECT_ISSUER_ID: Var.APP_STORE_CONNECT_ISSUER_ID
         APP_STORE_CONNECT_KEY_IDENTIFIER: 6F5CSC7HU6
-      node: v18
+      node: v22
       xcode: latest
       cocoapods: default
     scripts:
