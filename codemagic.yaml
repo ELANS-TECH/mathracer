@@ -36,8 +36,11 @@ workflows:
         script: |
           BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
           echo "Setting build number to $BUILD_NUMBER"
-          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD_NUMBER" ios/App/App/Info.plist
-          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString 1.0" ios/App/App/Info.plist
+          PBXPROJ="ios/App/App.xcodeproj/project.pbxproj"
+          # Add CURRENT_PROJECT_VERSION and MARKETING_VERSION to all buildSettings blocks
+          sed -i "" "s/PRODUCT_BUNDLE_IDENTIFIER = com.amine.mathracer;/PRODUCT_BUNDLE_IDENTIFIER = com.amine.mathracer;\n\t\t\t\tCURRENT_PROJECT_VERSION = $BUILD_NUMBER;\n\t\t\t\tMARKETING_VERSION = 1.0;/g" "$PBXPROJ"
+          echo "Done setting build number"
+          grep -n "CURRENT_PROJECT_VERSION" "$PBXPROJ"
       - name: Build iOS IPA
         script: |
           xcode-project build-ipa \
