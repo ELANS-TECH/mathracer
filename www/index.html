@@ -331,9 +331,12 @@ async function purchasePremium(){
       return;
     }
     const offerings = await Purchases.getOfferings();
-    const pkg = offerings?.current?.availablePackages?.[0];
+    // Try current offering first, then fall back to default_offering
+    const offering = offerings?.current || offerings?.all?.['default_offering'];
+    const pkg = offering?.availablePackages?.[0];
     if(!pkg){
       showToastMsg("⚠️ Product not available. Please try again later.");
+      console.error("Offerings:", JSON.stringify(offerings));
       return;
     }
     const { customerInfo } = await Purchases.purchasePackage({ aPackage: pkg });
@@ -342,8 +345,10 @@ async function purchasePremium(){
     }
   } catch(e) {
     const msg = (e && (e.message || e.code || '')).toString().toLowerCase();
-    if(!msg.includes('cancel') && !msg.includes('1') ){
-      showToastMsg("Purchase failed. Please try again.");
+    const cancelled = msg.includes('cancel') || msg === '1';
+    if(!cancelled){
+      const errDetail = e ? (e.message || e.code || JSON.stringify(e)) : 'unknown';
+      showToastMsg("Error: " + errDetail.substring(0, 60));
     }
     console.error("Purchase error:", e);
   }
