@@ -169,6 +169,26 @@ function set(u){Object.assign(G,u);draw();}
 
 // ── AdMob + UMP Consent (real Capacitor implementation) ──────────────────────
 const isCapacitor = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+const isIos = !!(window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'ios');
+
+// RevenueCat API Keys
+const RC_API_KEY_IOS = 'appl_VQKwawXoMZwhjAlKWPbjPqwhtyP';
+const RC_API_KEY_ANDROID = 'goog_REPLACE_WITH_YOUR_REVENUECAT_ANDROID_KEY';
+
+async function initRevenueCat() {
+  if (!isCapacitor) return;
+  try {
+    const { Purchases } = window.Capacitor.Plugins;
+    if (!Purchases) return;
+    const apiKey = isIos ? RC_API_KEY_IOS : RC_API_KEY_ANDROID;
+    await Purchases.configure({ apiKey });
+    // Restore premium status from RevenueCat
+    const { customerInfo } = await Purchases.getCustomerInfo();
+    if (customerInfo?.entitlements?.active?.['premium']) {
+      setPremium();
+    }
+  } catch(e) { console.warn('RevenueCat init error:', e); }
+}
 
 // Called once on app start — handles GDPR consent then initializes AdMob
 async function initAdMobWithConsent() {
@@ -305,28 +325,27 @@ async function purchasePremium(){
     return;
   }
   try {
-    const { CapacitorPurchases } = window.Capacitor.Plugins;
-    if(!CapacitorPurchases){
-      showToastMsg("⚠️ Purchase unavailable. Please update the app.");
+    const { Purchases } = window.Capacitor.Plugins;
+    if(!Purchases){
+      showToastMsg("⚠️ Purchase unavailable. Please try again later.");
       return;
     }
-    // Setup listener for successful purchase
-    await CapacitorPurchases.addListener('purchasesUpdate', (data) => {
-      const purchases = data.purchases || [];
-      const hasPremium = purchases.some(p =>
-        p.productIdentifier === PRODUCT_ID && p.transactionState === 'purchased'
-      );
-      if(hasPremium) onPremiumUnlocked();
-    });
-    // Initiate purchase
-    await CapacitorPurchases.purchaseProduct({ productIdentifier: PRODUCT_ID });
-  } catch(e) {
-    const msg = e && (e.message || e.code || '');
-    const cancelled = msg.toLowerCase().includes('cancel') || msg === 'USER_CANCELLED';
-    if(!cancelled){
-      showToastMsg("Purchase failed. Please try again.");
-      console.error("Purchase error:", e);
+    const offerings = await Purchases.getOfferings();
+    const pkg = offerings?.current?.availablePackages?.[0];
+    if(!pkg){
+      showToastMsg("⚠️ Product not available. Please try again later.");
+      return;
     }
+    const { customerInfo } = await Purchases.purchasePackage({ aPackage: pkg });
+    if(customerInfo?.entitlements?.active?.['premium']){
+      onPremiumUnlocked();
+    }
+  } catch(e) {
+    const msg = (e && (e.message || e.code || '')).toString().toLowerCase();
+    if(!msg.includes('cancel') && !msg.includes('1') ){
+      showToastMsg("Purchase failed. Please try again.");
+    }
+    console.error("Purchase error:", e);
   }
 }
 async function restorePurchase(){
@@ -335,17 +354,13 @@ async function restorePurchase(){
     return;
   }
   try {
-    const { CapacitorPurchases } = window.Capacitor.Plugins;
-    if(!CapacitorPurchases){
-      showToastMsg("⚠️ Restore unavailable. Please update the app.");
+    const { Purchases } = window.Capacitor.Plugins;
+    if(!Purchases){
+      showToastMsg("⚠️ Restore unavailable.");
       return;
     }
-    const result = await CapacitorPurchases.restoreTransactions();
-    const transactions = (result && (result.transactions || result.purchases)) || [];
-    const hasPremium = transactions.some(t =>
-      (t.productId || t.productIdentifier) === PRODUCT_ID
-    );
-    if(hasPremium){
+    const { customerInfo } = await Purchases.restorePurchases();
+    if(customerInfo?.entitlements?.active?.['premium']){
       onPremiumUnlocked();
       showToastMsg("✅ Purchase restored!");
     } else {
@@ -894,6 +909,7 @@ draw();
     }
     // Initialize AdMob + request GDPR consent after splash
     initAdMobWithConsent();
+    initRevenueCat();
   }, 2200);
 })();
 
