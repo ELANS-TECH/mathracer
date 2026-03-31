@@ -82,8 +82,8 @@ input{font-family:'Fredoka One',cursive;color:#fff;}
 // Ad Unit IDs — replace YOUR_IDs below:
 const AD_UNITS = {
   banner:       'ca-app-pub-5309223899838572/9687512932',  // bottom banner
-  interstitial: 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',  // between races
-  rewarded:     'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',  // extra life / retry
+  interstitial: 'ca-app-pub-5309223899838572/5906440160',  // between races
+  rewarded:     'ca-app-pub-5309223899838572/7353984284',  // extra life / retry
 };
 // RevenueCat product ID (set up in App Store Connect + RevenueCat dashboard):
 const PRODUCT_ID = 'com.amine.mathracer.premium';
@@ -170,10 +170,11 @@ function set(u){Object.assign(G,u);draw();}
 // ── AdMob + UMP Consent (real Capacitor implementation) ──────────────────────
 const isCapacitor = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
 const isIos = !!(window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'ios');
+const isAndroid = !!(window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'android');
 
 // RevenueCat API Keys
 const RC_API_KEY_IOS = 'appl_VQKwawXoMZwhjAlKWPbjPqwhtyP';
-const RC_API_KEY_ANDROID = 'goog_REPLACE_WITH_YOUR_REVENUECAT_ANDROID_KEY';
+const RC_API_KEY_ANDROID = 'goog_XuhIzifhaBaYCMDowEmIKmvfPJr';
 
 async function initRevenueCat() {
   if (!isCapacitor) return;
@@ -385,7 +386,7 @@ function onPremiumUnlocked(){
 }
 
 // ── Paywall ───────────────────────────────────────────────────────────────────
-function showPaywall(from){set({screen:"paywall",paywallFrom:from});}
+function showPaywall(from){if(isAndroid){showToastMsg("⭐ Premium available on iOS only");return;}set({screen:"paywall",paywallFrom:from});}
 
 // ── Question generator ────────────────────────────────────────────────────────
 function genQ(dk){
@@ -520,7 +521,7 @@ function endGame(w){
   G.raceCount++;
   draw();
   // Show interstitial every 3 races for free users
-  const showAd=!G.premium&&G.raceCount%3===0&&(w==="player"||w==="cpu");
+  const showAd=!G.premium&&G.raceCount%2===0&&(w==="player"||w==="cpu");
   setTimeout(()=>{
     saveResults();
     if(showAd){
@@ -582,8 +583,17 @@ function saveName(){
 function quitGame(){
   clearInterval(G.tid);clearInterval(G.cid);
   hideBannerAd();
-  set({screen:"menu",showQuit:false,winner:null});
+  if(!G.premium && G.raceCount>0){
+    showInterstitialAd(()=>set({screen:"menu",showQuit:false,winner:null}));
+  } else {
+    set({screen:"menu",showQuit:false,winner:null});
+  }
 }
+
+
+
+
+
 
 // ── Render helpers ────────────────────────────────────────────────────────────
 function track(pos,color,label,emoji,flip){
