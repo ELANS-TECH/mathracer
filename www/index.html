@@ -305,21 +305,25 @@ async function purchasePremium(){
     return;
   }
   try {
-    const { CapacitorPurchases } = window.Capacitor.Plugins; // @capgo/capacitor-purchases
+    const { CapacitorPurchases } = window.Capacitor.Plugins;
     if(!CapacitorPurchases){
-      showToastMsg("⚠️ Purchase system unavailable");
+      showToastMsg("⚠️ Purchase unavailable. Please update the app.");
       return;
     }
-    // Initiate the real Apple/Google purchase flow
-    const result = await CapacitorPurchases.purchaseProduct({
-      productIdentifier: PRODUCT_ID
+    // Setup listener for successful purchase
+    await CapacitorPurchases.addListener('purchasesUpdate', (data) => {
+      const purchases = data.purchases || [];
+      const hasPremium = purchases.some(p =>
+        p.productIdentifier === PRODUCT_ID && p.transactionState === 'purchased'
+      );
+      if(hasPremium) onPremiumUnlocked();
     });
-    // Check if purchase was successful
-    if(result && result.productIdentifier){
-      onPremiumUnlocked();
-    }
+    // Initiate purchase
+    await CapacitorPurchases.purchaseProduct({ productIdentifier: PRODUCT_ID });
   } catch(e) {
-    if(e && e.code !== 'USER_CANCELLED'){
+    const msg = e && (e.message || e.code || '');
+    const cancelled = msg.toLowerCase().includes('cancel') || msg === 'USER_CANCELLED';
+    if(!cancelled){
       showToastMsg("Purchase failed. Please try again.");
       console.error("Purchase error:", e);
     }
@@ -331,15 +335,16 @@ async function restorePurchase(){
     return;
   }
   try {
-    const { CapacitorPurchases } = window.Capacitor.Plugins; // @capgo/capacitor-purchases
+    const { CapacitorPurchases } = window.Capacitor.Plugins;
     if(!CapacitorPurchases){
-      showToastMsg("⚠️ Purchase system unavailable");
+      showToastMsg("⚠️ Restore unavailable. Please update the app.");
       return;
     }
     const result = await CapacitorPurchases.restoreTransactions();
-    // Check if any transaction matches our product
-    const transactions = result.transactions || [];
-    const hasPremium = transactions.some(t => t.productId === PRODUCT_ID);
+    const transactions = (result && (result.transactions || result.purchases)) || [];
+    const hasPremium = transactions.some(t =>
+      (t.productId || t.productIdentifier) === PRODUCT_ID
+    );
     if(hasPremium){
       onPremiumUnlocked();
       showToastMsg("✅ Purchase restored!");
