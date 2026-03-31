@@ -305,7 +305,7 @@ async function purchasePremium(){
     return;
   }
   try {
-    const { CapacitorPurchases } = window.Capacitor.Plugins;
+    const { CapacitorPurchases } = window.Capacitor.Plugins; // @capgo/capacitor-purchases
     if(!CapacitorPurchases){
       showToastMsg("⚠️ Purchase system unavailable");
       return;
@@ -331,7 +331,7 @@ async function restorePurchase(){
     return;
   }
   try {
-    const { CapacitorPurchases } = window.Capacitor.Plugins;
+    const { CapacitorPurchases } = window.Capacitor.Plugins; // @capgo/capacitor-purchases
     if(!CapacitorPurchases){
       showToastMsg("⚠️ Purchase system unavailable");
       return;
