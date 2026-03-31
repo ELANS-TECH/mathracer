@@ -86,7 +86,7 @@ const AD_UNITS = {
   rewarded:     'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX',  // extra life / retry
 };
 // RevenueCat product ID (set up in App Store Connect + RevenueCat dashboard):
-const PRODUCT_ID = 'math_racer_premium';
+const PRODUCT_ID = 'com.amine.mathracer.premium';
 // ═══════════════════════════════════════════════════════════════
 
 const TL=100,BOOST=6,PEN=-2,MXPT=20;
@@ -298,29 +298,58 @@ async function showRewardedAd(callback) {
   }
 }
 
-// ── Purchase (stub — replace with RevenueCat in Capacitor) ────────────────────
+// ── Purchase (Capacitor In-App Purchases) ─────────────────────────────────────
 async function purchasePremium(){
-  // CAPACITOR (RevenueCat):
-  // try {
-  //   const { customerInfo } = await Purchases.purchaseProduct(PRODUCT_ID);
-  //   if (customerInfo.entitlements.active['premium']) {
-  //     onPremiumUnlocked();
-  //   }
-  // } catch(e) { console.log('Purchase cancelled'); }
-  //
-  // SIMULATION (remove in production):
-  const confirmed=confirm("Simulate $1.99 purchase? (In the real app this opens the App Store payment sheet)");
-  if(confirmed){onPremiumUnlocked();}
+  if(!isCapacitor){
+    showToastMsg("💡 Purchases only work in the app");
+    return;
+  }
+  try {
+    const { CapacitorPurchases } = window.Capacitor.Plugins;
+    if(!CapacitorPurchases){
+      showToastMsg("⚠️ Purchase system unavailable");
+      return;
+    }
+    // Initiate the real Apple/Google purchase flow
+    const result = await CapacitorPurchases.purchaseProduct({
+      productIdentifier: PRODUCT_ID
+    });
+    // Check if purchase was successful
+    if(result && result.productIdentifier){
+      onPremiumUnlocked();
+    }
+  } catch(e) {
+    if(e && e.code !== 'USER_CANCELLED'){
+      showToastMsg("Purchase failed. Please try again.");
+      console.error("Purchase error:", e);
+    }
+  }
 }
 async function restorePurchase(){
-  // CAPACITOR (RevenueCat):
-  // const { customerInfo } = await Purchases.restorePurchases();
-  // if (customerInfo.entitlements.active['premium']) { onPremiumUnlocked(); }
-  // else { alert('No previous purchase found.'); }
-  //
-  // SIMULATION:
-  if(ld("premium",false)){onPremiumUnlocked();showToastMsg("✅ Purchase restored!");}
-  else alert("No previous purchase found.");
+  if(!isCapacitor){
+    showToastMsg("💡 Restore only works in the app");
+    return;
+  }
+  try {
+    const { CapacitorPurchases } = window.Capacitor.Plugins;
+    if(!CapacitorPurchases){
+      showToastMsg("⚠️ Purchase system unavailable");
+      return;
+    }
+    const result = await CapacitorPurchases.restoreTransactions();
+    // Check if any transaction matches our product
+    const transactions = result.transactions || [];
+    const hasPremium = transactions.some(t => t.productId === PRODUCT_ID);
+    if(hasPremium){
+      onPremiumUnlocked();
+      showToastMsg("✅ Purchase restored!");
+    } else {
+      showToastMsg("No previous purchase found.");
+    }
+  } catch(e) {
+    showToastMsg("Restore failed. Please try again.");
+    console.error("Restore error:", e);
+  }
 }
 function onPremiumUnlocked(){
   setPremium();

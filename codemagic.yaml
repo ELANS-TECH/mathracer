@@ -19,6 +19,7 @@ workflows:
         script: |
           npm install
           npm install @capacitor/ios
+          npm install @capacitor-community/purchases
       - name: Add iOS platform
         script: |
           npx cap add ios || true
@@ -30,7 +31,7 @@ workflows:
           xcode-project use-profiles
       - name: Set build number
         script: |
-          BUILD_NUMBER=2
+          BUILD_NUMBER=3
           echo "Setting build number to $BUILD_NUMBER"
           PBXPROJ="ios/App/App.xcodeproj/project.pbxproj"
           sed -i "" "s/CURRENT_PROJECT_VERSION = [0-9]*/CURRENT_PROJECT_VERSION = $BUILD_NUMBER/g" "$PBXPROJ"
