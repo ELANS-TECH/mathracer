@@ -185,7 +185,7 @@ async function initRevenueCat() {
     await Purchases.configure({ apiKey });
     // Restore premium status from RevenueCat
     const { customerInfo } = await Purchases.getCustomerInfo();
-    if (customerInfo?.entitlements?.active?.['premium']) {
+    if (customerInfo?.entitlements?.active?.['Elans Tech Pro']) {
       setPremium();
     }
   } catch(e) { console.warn('RevenueCat init error:', e); }
@@ -341,7 +341,7 @@ async function purchasePremium(){
       return;
     }
     const { customerInfo } = await Purchases.purchasePackage({ aPackage: pkg });
-    if(customerInfo?.entitlements?.active?.['premium']){
+    if(customerInfo?.entitlements?.active?.['Elans Tech Pro']){
       onPremiumUnlocked();
     }
   } catch(e) {
@@ -366,7 +366,7 @@ async function restorePurchase(){
       return;
     }
     const { customerInfo } = await Purchases.restorePurchases();
-    if(customerInfo?.entitlements?.active?.['premium']){
+    if(customerInfo?.entitlements?.active?.['Elans Tech Pro']){
       onPremiumUnlocked();
       showToastMsg("✅ Purchase restored!");
     } else {
