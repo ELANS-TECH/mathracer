@@ -30,9 +30,9 @@ input{font-family:'Fredoka One',cursive;color:#fff;}
 .ac{background:#1a7a4a!important;border-color:#00ff88!important;box-shadow:0 0 18px #00ff8888!important;transform:scale(1.03);}
 .aw{background:#7a1a1a!important;border-color:#ff4444!important;box-shadow:0 0 18px #ff444488!important;transform:scale(1.03);}
 .am{background:#1a4a2a!important;border-color:#00ff88!important;box-shadow:0 0 14px #00ff8866!important;transform:scale(1.03);}
-.diff-btn{width:100%;display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-radius:14px;font-size:15px;background:linear-gradient(135deg,#2a2560,#1a1a3e);border:2px solid #4a3fa044;margin-bottom:7px;}
+.diff-btn{width:100%;display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-radius:12px;font-size:13px;background:linear-gradient(135deg,#2a2560,#1a1a3e);border:2px solid #4a3fa044;margin-bottom:4px;}
 .diff-sel{background:linear-gradient(135deg,#00c9a7,#005f56)!important;border-color:#00ff88!important;box-shadow:0 0 10px #00ff8844;}
-.mode-btn{width:100%;display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:14px;font-size:15px;background:linear-gradient(135deg,#2a2560,#1a1a3e);border:2px solid #4a3fa044;margin-bottom:8px;text-align:left;}
+.mode-btn{width:100%;display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:12px;font-size:14px;background:linear-gradient(135deg,#2a2560,#1a1a3e);border:2px solid #4a3fa044;margin-bottom:5px;text-align:left;}
 .carbtn{background:#1a1a3e;border:2px solid #4a3fa044;border-radius:14px;padding:12px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all 0.15s;cursor:pointer;}
 .carsel{background:linear-gradient(135deg,#00c9a7,#005f56)!important;border-color:#00ff88!important;box-shadow:0 0 14px #00ff8855!important;}
 .locked{opacity:0.5;cursor:default;position:relative;}
@@ -101,7 +101,7 @@ const DIFF={
 
 const MODES={
   race:    {id:"race",    icon:"🏁", label:"Race",         color:"#f7971e", desc:"Beat the CPU to the finish line",             free:true},
-  sudden:  {id:"sudden",  icon:"💀", label:"Sudden Death", color:"#ff4444", desc:"One wrong answer and it's over! (Teacher ops)",free:true},
+  sudden:  {id:"sudden",  icon:"💀", label:"Sudden Death", color:"#ff4444", desc:"One wrong answer and it's over! Difficulty increases!",free:true},
   practice:{id:"practice",icon:"📚", label:"Practice",     color:"#00c9a7", desc:"No CPU, no timer — drill at your own pace",    free:false},
   marathon:{id:"marathon",icon:"🏃", label:"Marathon",     color:"#a855f7", desc:"Questions get harder · 3 strikes and you're out",free:false},
 };
@@ -171,6 +171,7 @@ function set(u){Object.assign(G,u);draw();}
 const isCapacitor = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
 const isIos = !!(window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'ios');
 const isAndroid = !!(window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'android');
+function isSuddenMode(){return G.mode==="sudden";}
 
 // RevenueCat API Keys
 const RC_API_KEY_IOS = 'appl_VQKwawXoMZwhjAlKWPbjPqwhtyP';
@@ -407,12 +408,17 @@ function marathonDiffKey(){
   const idx=Math.min(Math.floor(G.tc/5),steps.length-1);
   return steps[idx];
 }
+function suddenDiffKey(){
+  const steps=["easy","medium","hard","teacher"];
+  const idx=Math.min(Math.floor(G.qCount/10),steps.length-1);
+  return steps[idx];
+}
 
 // ── Start game ────────────────────────────────────────────────────────────────
 function startGame(){
   // Check access
   if(!canUse(MODES[G.mode])){showPaywall("mode");return;}
-  if(!canUse(DIFF[G.diff])){showPaywall("diff");return;}
+  if(G.mode!=="sudden"&&!canUse(DIFF[G.diff])){showPaywall("diff");return;}
   clearInterval(G.tid);clearInterval(G.cid);
   // Countdown 3-2-1-GO!
   const isPracticeCheck=G.mode==="practice";
@@ -422,7 +428,7 @@ function startGame(){
     function showCount(){
       app.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px">
         <div style="font-size:100px;animation:splashIn 0.3s ease">${count>0?count:"🏁 GO!"}</div>
-        <div class="nunito" style="color:#888;font-size:16px">${MODES[G.mode].icon} ${MODES[G.mode].label} · ${DIFF[G.diff].label}</div>
+        <div class="nunito" style="color:#888;font-size:16px">${MODES[G.mode].icon} ${MODES[G.mode].label}${G.mode!=="sudden"?" · "+DIFF[G.diff].label:""}</div>
       </div>`;
       if(count>0){count--;setTimeout(showCount,800);}
       else{setTimeout(doStartGame,400);}
@@ -436,21 +442,20 @@ function doStartGame(){
   clearInterval(G.tid);clearInterval(G.cid);
   const isPractice=G.mode==="practice";
   const isMarathon=G.mode==="marathon";
-  const isSudden=G.mode==="sudden";
   Object.assign(G,{
     screen:"playing",ppos:0,cpos:0,score:0,streak:0,maxStreak:0,
     tc:0,ta:0,winner:null,newBest:false,cpuAhead:false,
     showQuit:false,showNext:false,lives:3,qCount:0,practiceTotal:0,marathonDiff:"easy",
-    diff:isSudden?"teacher":G.diff,
+    diff:G.diff,
   });
   // Show banner ad for free users
   if(!G.premium&&!isPractice) showBannerAd();
   else hideBannerAd();
   nextQ();
   if(!isPractice&&!isMarathon){
-    const d=DIFF[isSudden?"teacher":G.diff];
-    const iv=isSudden?420:[750,620,500,420][d.ops.length-1];
-    const sp=isSudden?3.5:[1.4,2.0,2.7,3.1][d.ops.length-1];
+    const d=DIFF[G.diff];
+    const iv=isSuddenMode()?500:[750,620,500,420][d.ops.length-1];
+    const sp=isSuddenMode()?1.8:[1.4,2.0,2.7,3.1][d.ops.length-1];
     G.cid=setInterval(()=>{
       const np=Math.min(TL,G.cpos+Math.random()*sp);
       if(np>G.ppos)G.cpuAhead=true;
@@ -466,9 +471,9 @@ function nextQ(){
   clearInterval(G.tid);
   const isPractice=G.mode==="practice";
   const isMarathon=G.mode==="marathon";
-  const dk=isMarathon?marathonDiffKey():G.diff;
+  const dk=isMarathon?marathonDiffKey():isSuddenMode()?suddenDiffKey():G.diff;
   if(isMarathon)G.marathonDiff=dk;
-  const qt=isPractice?999:DIFF[dk].time;
+  const qt=isPractice?999:isSuddenMode()?10:DIFF[dk].time;
   Object.assign(G,{q:genQ(dk),as:{},busy:false,showNext:false,tl:qt});
   draw();
   if(!isPractice){
@@ -495,27 +500,26 @@ function answer(choice){
   G.busy=true;G.ta++;
   const isPractice=G.mode==="practice";
   const isMarathon=G.mode==="marathon";
-  const isSudden=G.mode==="sudden";
-  const dk=isMarathon?marathonDiffKey():G.diff;
+  const dk=isMarathon?marathonDiffKey():isSuddenMode()?suddenDiffKey():G.diff;
   if(choice===G.q.ans){
     G.as={[choice]:"c"};
     const ns=G.streak+1;G.streak=ns;
     if(ns>G.maxStreak)G.maxStreak=ns;
     const bonus=ns>=3?2:1;
-    const qt=DIFF[dk].time;
+    const qt=isSuddenMode()?10:DIFF[dk].time;
     const pts=isPractice?MXPT:Math.max(1,Math.round((G.tl/qt)*MXPT))*bonus;
     G.score+=pts;G.tc++;G.qCount++;
     if(isPractice){G.practiceTotal++;draw();setTimeout(nextQ,700);}
     else{
       G.ppos=Math.min(TL,G.ppos+BOOST*bonus);draw();
-      if((G.mode==="race"||isSudden)&&G.ppos>=TL)endGame("player");
+      if((G.mode==="race"||isSuddenMode())&&G.ppos>=TL)endGame("player");
       else setTimeout(nextQ,700);
     }
   }else{
     G.as={[choice]:"w",[G.q.ans]:"m"};
     G.streak=0;
     if(!isPractice)G.ppos=Math.max(0,G.ppos+PEN);
-    if(isSudden){draw();setTimeout(()=>endGame("sudden"),800);return;}
+    if(isSuddenMode()){draw();setTimeout(()=>endGame("sudden"),800);return;}
     if(isMarathon){G.lives--;draw();if(G.lives<=0){setTimeout(()=>endGame("out"),800);return;}}
     G.showNext=true;draw();
   }
@@ -704,7 +708,7 @@ function draw(){
       const sel=G.mode===m.id;
       const locked=!canUse(m);
       return `<button class="mode-btn" style="border-color:${sel?m.color+"99":"#4a3fa044"};background:${sel?`linear-gradient(135deg,${m.color}22,#1a1a3e)`:"linear-gradient(135deg,#2a2560,#1a1a3e)"};opacity:${locked&&!sel?0.7:1}" onclick="${locked?"showPaywall('mode')":"set({mode:'"+m.id+"'})"}">
-        <span style="font-size:26px">${m.icon}</span>
+        <span style="font-size:20px">${m.icon}</span>
         <span style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;flex:1">
           <span style="color:${sel?m.color:"#fff"};font-size:16px">${m.label}</span>
           <span class="nunito" style="color:#888;font-size:11px">${m.desc}</span>
@@ -724,26 +728,28 @@ function draw(){
     }).join("")}</div>`:"";
 
     const modeColor=MODES[G.mode].color;
-    app.innerHTML=`<div style="width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center">
-      <div style="font-size:56px;filter:drop-shadow(0 0 14px ${CL.p});transform:scaleX(-1);margin-bottom:4px">${G.car.e}</div>
-      <h1 style="color:${CL.g};font-size:40px;margin:2px 0;text-shadow:0 0 22px #ffd70088;letter-spacing:2px">MATH RACER</h1>
-      <div style="margin:8px 0 14px">${nameEl}</div>
+    app.innerHTML=`<div style="width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;padding:6px 0">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
+        <div style="font-size:36px;filter:drop-shadow(0 0 10px ${CL.p});transform:scaleX(-1)">${G.car.e}</div>
+        <h1 style="color:${CL.g};font-size:32px;margin:0;text-shadow:0 0 18px #ffd70088;letter-spacing:2px">MATH RACER</h1>
+      </div>
+      <div style="margin:4px 0 8px">${nameEl}</div>
 
-      ${!G.premium?`<button onclick="showPaywall('banner')" style="width:100%;background:linear-gradient(135deg,#2a1500,#1a1a3e);border:1px solid ${CL.g}55;border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <span style="font-size:22px">⭐</span>
+      ${!G.premium?`<button onclick="showPaywall('banner')" style="width:100%;background:linear-gradient(135deg,#2a1500,#1a1a3e);border:1px solid ${CL.g}55;border-radius:12px;padding:7px 12px;display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:18px">⭐</span>
         <span style="display:flex;flex-direction:column;align-items:flex-start">
-          <span style="font-size:15px;color:${CL.g}">Unlock Full Game — $1.99</span>
-          <span class="nunito" style="font-size:11px;color:#888">All modes · All cars · No ads</span>
+          <span style="font-size:13px;color:${CL.g}">Unlock Full Game — $1.99</span>
+          <span class="nunito" style="font-size:10px;color:#888">All modes · All cars · No ads</span>
         </span>
         <span style="margin-left:auto;color:${CL.g}">→</span>
       </button>`:""}
 
-      <p style="color:#aaa;font-size:12px;margin-bottom:8px;letter-spacing:1px">GAME MODE</p>
-      <div style="width:100%;margin-bottom:10px">${modeBtns}</div>
+      <p style="color:#aaa;font-size:11px;margin-bottom:5px;letter-spacing:1px">GAME MODE</p>
+      <div style="width:100%;margin-bottom:6px">${modeBtns}</div>
       ${diffBtns}
-      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0">
+      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0">
         <button class="btn" style="background:linear-gradient(135deg,#4a3fa0,#302b63);border:2px solid ${CL.p}44" onclick="set({screen:'car'})">🚗 Car</button>
-        <button class="btn" style="background:linear-gradient(135deg,${modeColor},#1a0a0a);font-size:20px;padding:12px 32px;box-shadow:0 4px 22px ${modeColor}55" onclick="startGame()">${MODES[G.mode].icon} Play!</button>
+        <button class="btn" style="background:linear-gradient(135deg,${modeColor},#1a0a0a);font-size:18px;padding:10px 26px;box-shadow:0 4px 18px ${modeColor}55" onclick="startGame()">${MODES[G.mode].icon} Play!</button>
         <button class="btn" style="background:linear-gradient(135deg,#4a3fa0,#302b63);border:2px solid ${CL.g}44" onclick="set({screen:'lb'})">🏆 Board</button>
         <button class="btn" style="background:linear-gradient(135deg,#4a3fa0,#302b63);border:2px solid ${CL.g}44" onclick="set({screen:'ach'})">🎖️ Badges</button>
         <button class="btn" style="background:linear-gradient(135deg,#4a3fa0,#302b63);border:2px solid ${CL.p}44" onclick="set({screen:'stats'})">📊 Stats</button>
@@ -839,12 +845,11 @@ function draw(){
     const acc=G.ta>0?Math.round(G.tc/G.ta*100):0;
     const isPractice=G.mode==="practice";
     const isMarathon=G.mode==="marathon";
-    const isSudden=G.mode==="sudden";
-    const won=G.winner==="player";
+      const won=G.winner==="player";
     let emoji,title,subtitle;
     if(isPractice){emoji="📚";title="Practice Done!";subtitle=`${G.tc} questions answered`;}
     else if(isMarathon&&G.winner==="out"){emoji="💔";title="3 Strikes!";subtitle="Better luck next time!";}
-    else if(isSudden&&G.winner==="sudden"){emoji="💀";title="Eliminated!";subtitle="One wrong answer ended it!";}
+    else if(isSuddenMode()&&G.winner==="sudden"){emoji="💀";title="Eliminated!";subtitle="One wrong answer ended it!";}
     else if(won){emoji="🏆";title="YOU WIN!";subtitle="Amazing! 🎉";}
     else{emoji="💨";title="CPU WINS!";subtitle="Better luck next time! 💪";}
     const modeLabel=MODES[G.mode].label;
@@ -879,11 +884,10 @@ function draw(){
   else if(G.screen==="playing"){
     const isPractice=G.mode==="practice";
     const isMarathon=G.mode==="marathon";
-    const isSudden=G.mode==="sudden";
-    const showCPU=!isPractice&&!isMarathon;
+      const showCPU=!isPractice&&!isMarathon;
     const dk=isMarathon?G.marathonDiff:G.diff;
     const d=DIFF[dk];
-    const potPts=G.tl>0&&!isPractice?Math.max(1,Math.round((G.tl/d.time)*MXPT))*(G.streak>=3?2:1):MXPT;
+    const potPts=G.tl>0&&!isPractice?Math.max(1,Math.round((G.tl/(isSuddenMode()?10:d.time))*MXPT))*(G.streak>=3?2:1):MXPT;
     const ansBtns=G.q?G.q.ch.map(c=>abtn(c,G.as[c]||null)).join(""):"";
     const modeColor=MODES[G.mode].color;
     const bottomPad=!G.premium&&!isPractice?"padding-bottom:70px":"";
@@ -900,7 +904,7 @@ function draw(){
 
     let statusRight="";
     if(isMarathon) statusRight=`<div style="display:flex;gap:4px;align-items:center">${livesHTML(G.lives)}${!G.premium?`<span onclick="watchAdForLife()" style="font-size:11px;color:${CL.g};cursor:pointer;margin-left:4px;font-family:'Nunito',sans-serif">+❤️</span>`:""}</div>`;
-    else if(isSudden) statusRight=`<div style="color:#ff4444;font-size:12px;font-family:'Nunito',sans-serif">☠️ One chance!</div>`;
+    else if(isSuddenMode()) statusRight=`<div style="color:#ff4444;font-size:12px;font-family:'Nunito',sans-serif">☠️ One chance!</div>`;
     else statusRight=`<div style="color:${G.streak>=3?"#ff6b35":"#666"};font-size:18px">🔥 ×${G.streak}</div>`;
 
     app.innerHTML=`${quitOv}<div style="width:100%;max-width:500px;${bottomPad}">
@@ -925,7 +929,7 @@ function draw(){
         ${!isPractice?`<div class="nunito" style="display:flex;justify-content:center;gap:16px;color:${G.tl===0?CL.no:"#666"};font-size:12px;margin-bottom:6px">
           <span>${G.tl>0?`⏱ ${G.tl}s`:"⏱ Time's up!"}</span>
           ${G.tl>0?`<span style="color:${CL.g}">⭐ up to ${potPts} pts</span>`:""}
-          ${isSudden?`<span style="color:#ff4444">💀 No mistakes!</span>`:""}
+          ${isSuddenMode()?`<span style="color:#ff4444">💀 No mistakes!</span>`:""}
         </div>`:""}
         <div style="text-align:center;font-size:34px;margin:6px 0 14px;letter-spacing:1px">${G.q.text}</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:8px">${ansBtns}</div>
