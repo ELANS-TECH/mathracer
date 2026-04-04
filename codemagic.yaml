@@ -31,11 +31,14 @@ workflows:
           xcode-project use-profiles
       - name: Set build number
         script: |
-          BUILD_NUMBER=12
-          echo "Setting build number to $BUILD_NUMBER"
+          BUILD_NUMBER=13
+          VERSION_NAME="1.1"
+          echo "Setting build number to $BUILD_NUMBER and version to $VERSION_NAME"
           PBXPROJ="ios/App/App.xcodeproj/project.pbxproj"
           sed -i "" "s/CURRENT_PROJECT_VERSION = [0-9]*/CURRENT_PROJECT_VERSION = $BUILD_NUMBER/g" "$PBXPROJ"
+          sed -i "" "s/MARKETING_VERSION = [0-9]*\.[0-9]*/MARKETING_VERSION = $VERSION_NAME/g" "$PBXPROJ"
           grep "CURRENT_PROJECT_VERSION" "$PBXPROJ"
+          grep "MARKETING_VERSION" "$PBXPROJ"
       - name: Build iOS IPA
         script: |
           xcode-project build-ipa \
