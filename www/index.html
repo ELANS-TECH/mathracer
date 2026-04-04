@@ -94,14 +94,14 @@ const CL={p:"#00f5ff",c:"#ff4ecb",ok:"#00ff88",no:"#ff4444",g:"#ffd700"};
 
 const DIFF={
   easy:   {label:"🟢 Easy",    desc:"Addition · up to 50",       ops:["+"],             max:25,  time:12, free:true},
-  medium: {label:"🟡 Medium",  desc:"Add & subtract · up to 99", ops:["+","-"],          max:50,  time:10, free:false},
-  hard:   {label:"🔴 Hard",    desc:"Adds multiply · up to 999", ops:["+","-","*"],      max:99,  time:8,  free:true},
+  medium: {label:"🟡 Medium",  desc:"Add & subtract · up to 99", ops:["+","-"],          max:50,  time:10, free:true},
+  hard:   {label:"🔴 Hard",    desc:"All ops · up to 999",        ops:["+","-","*","/"], max:99,  time:8,  free:true},
   teacher:{label:"👩‍🏫 Teacher",desc:"All ops · up to 4 digits",  ops:["+","-","*","/"], max:999, time:6,  free:false},
 };
 
 const MODES={
   race:    {id:"race",    icon:"🏁", label:"Race",         color:"#f7971e", desc:"Beat the CPU to the finish line",             free:true},
-  sudden:  {id:"sudden",  icon:"💀", label:"Sudden Death", color:"#ff4444", desc:"One wrong answer and it's over! (Teacher ops)",free:false},
+  sudden:  {id:"sudden",  icon:"💀", label:"Sudden Death", color:"#ff4444", desc:"One wrong answer and it's over! (Teacher ops)",free:true},
   practice:{id:"practice",icon:"📚", label:"Practice",     color:"#00c9a7", desc:"No CPU, no timer — drill at your own pace",    free:false},
   marathon:{id:"marathon",icon:"🏃", label:"Marathon",     color:"#a855f7", desc:"Questions get harder · 3 strikes and you're out",free:false},
 };
@@ -155,7 +155,7 @@ const G={
   ppos:0, cpos:0, q:null, score:0, streak:0, maxStreak:0,
   as:{}, tl:12, busy:false, winner:null, tc:0, ta:0,
   showNext:false, showQuit:false, cpuAhead:false, newBest:false,
-  lbTab:"easy", editName:false, nameIn:"",
+  lbTab:"easy", lbGlobal:false, globalLbData:null, editName:false, nameIn:"",
   lives:3, qCount:0, practiceTotal:0, marathonDiff:"easy",
   raceCount:0,        // tracks races since last ad
   paywallFrom:null,   // which feature triggered the paywall
@@ -349,7 +349,7 @@ async function purchasePremium(){
     const cancelled = msg.includes('cancel') || msg === '1';
     if(!cancelled){
       const errDetail = e ? (e.message || e.code || JSON.stringify(e)) : 'unknown';
-      showToastMsg("Error: " + errDetail.substring(0, 60));
+      showToastMsg("Error: " + errDetail.substring(0, 120));
     }
     console.error("Purchase error:", e);
   }
@@ -392,12 +392,14 @@ function showPaywall(from){if(isAndroid){showToastMsg("⭐ Premium available on 
 function genQ(dk){
   const{ops,max}=DIFF[dk],op=ops[rnd(ops.length)];
   let a,b,ans;
-  if(op==="+"){a=rnd(max+1);b=rnd(max+1-a);ans=a+b;}
-  else if(op==="-"){a=rnd(max+1);b=rnd(a+1);ans=a-b;}
-  else if(op==="*"){const l=Math.ceil(Math.sqrt(max*10));a=rnd(l)+2;b=rnd(l)+2;ans=a*b;}
-  else{b=rnd(11)+2;ans=rnd(100)+2;a=b*ans;}
+  do {
+    if(op==="+"){a=rnd(max)+1;b=rnd(max)+1;ans=a+b;}
+    else if(op==="-"){a=rnd(max)+1;b=rnd(a)+1;ans=a-b;}
+    else if(op==="*"){const l=Math.ceil(Math.sqrt(max*10));a=rnd(l)+2;b=rnd(l)+2;ans=a*b;}
+    else{b=rnd(11)+2;ans=rnd(100)+2;a=b*ans;}
+  } while(a===0||b===0||ans===0);
   const w=new Set();
-  while(w.size<3){const d=rnd(10)+1;const c=Math.random()>.5?ans+d:Math.max(0,ans-d);if(c!==ans)w.add(c);}
+  while(w.size<3){const d=rnd(10)+1;const c=Math.random()>.5?ans+d:Math.max(1,ans-d);if(c!==ans&&c>0)w.add(c);}
   return{text:`${a} ${op} ${b} = ?`,ans,ch:[ans,...w].sort(()=>Math.random()-.5)};
 }
 function marathonDiffKey(){
@@ -411,6 +413,26 @@ function startGame(){
   // Check access
   if(!canUse(MODES[G.mode])){showPaywall("mode");return;}
   if(!canUse(DIFF[G.diff])){showPaywall("diff");return;}
+  clearInterval(G.tid);clearInterval(G.cid);
+  // Countdown 3-2-1-GO!
+  const isPracticeCheck=G.mode==="practice";
+  if(!isPracticeCheck){
+    let count=3;
+    const tc=document.getElementById("tc")||document.body;
+    function showCount(){
+      app.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px">
+        <div style="font-size:100px;animation:splashIn 0.3s ease">${count>0?count:"🏁 GO!"}</div>
+        <div class="nunito" style="color:#888;font-size:16px">${MODES[G.mode].icon} ${MODES[G.mode].label} · ${DIFF[G.diff].label}</div>
+      </div>`;
+      if(count>0){count--;setTimeout(showCount,800);}
+      else{setTimeout(doStartGame,400);}
+    }
+    showCount();
+    return;
+  }
+  doStartGame();
+}
+function doStartGame(){
   clearInterval(G.tid);clearInterval(G.cid);
   const isPractice=G.mode==="practice";
   const isMarathon=G.mode==="marathon";
@@ -547,6 +569,7 @@ function saveResults(){
     if(!b[lbKey]||G.score>b[lbKey]){b[lbKey]=G.score;sv("best",b);G.best=b;G.newBest=true;}
     const nl=[...G.lb,{name:G.pname,score:G.score,accuracy:acc,diff:lbKey,car:G.car.e,date:new Date().toLocaleDateString()}].sort((a,b)=>b.score-a.score).slice(0,40);
     sv("lb",nl);G.lb=nl;
+    submitToGlobalLb(G.score,acc,lbKey);
   }
   if(won)unlockAch("first_win");
   if(G.maxStreak>=5)unlockAch("streak5");
@@ -792,6 +815,7 @@ function draw(){
   // ── STATS ──────────────────────────────────────────────────────────────────
   else if(G.screen==="stats"){
     const st=G.stats,wr=st.races>0?Math.round(st.wins/st.races*100):0,ac=st.totalAnswered>0?Math.round(st.totalCorrect/st.totalAnswered*100):0;
+    const losses=(st.races||0)-(st.wins||0);
     const sc=(i,l,v,c)=>`<div style="background:#1a1a3e;border:1px solid #4a3fa044;border-radius:16px;padding:12px 8px;text-align:center"><div style="font-size:26px">${i}</div><div style="color:${c||"#fff"};font-size:20px">${v}</div><div class="nunito" style="color:#888;font-size:10px">${l}</div></div>`;
     const allKeys={...DIFF,marathon:{label:"🏃 Marathon"},sudden:{label:"💀 Sudden Death"}};
     const br=Object.entries(allKeys).map(([k,d])=>`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span class="nunito" style="color:#ccc;font-size:13px">${d.label}</span><span style="color:${G.best[k]?CL.g:"#444"};font-size:15px">${G.best[k]?`⭐ ${G.best[k]}`:"—"}</span></div>`).join("");
@@ -799,8 +823,9 @@ function draw(){
       <h2 style="color:${CL.g};font-size:30px;margin-bottom:4px">📊 My Stats</h2>
       <p class="nunito" style="color:#666;font-size:13px;margin-bottom:16px">👤 ${G.pname} ${G.premium?'<span class="premium-badge">⭐ PRO</span>':""}</p>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;width:100%;max-width:420px;margin-bottom:14px">
-        ${sc("🏁","Races",st.races)}${sc("🏆","Wins",st.wins,CL.g)}${sc("📈","Win Rate",wr+"%",CL.ok)}
-        ${sc("✅","Correct",st.totalCorrect)}${sc("🎯","Accuracy",ac+"%",CL.p)}${sc("🔥","Best Streak",st.maxStreak,"#ff6b35")}
+        ${sc("🏁","Races",st.races)}${sc("🏆","Wins",st.wins,CL.g)}${sc("💔","Losses",losses,"#ff4444")}
+        ${sc("📈","Win Rate",wr+"%",CL.ok)}${sc("🎯","Accuracy",ac+"%",CL.p)}${sc("🔥","Best Streak",st.maxStreak,"#ff6b35")}
+        ${sc("✅","Correct",st.totalCorrect)}${sc("❌","Wrong",(st.totalAnswered||0)-(st.totalCorrect||0),"#ff4444")}${sc("📝","Answered",st.totalAnswered||0)}
       </div>
       <div class="card" style="width:100%;max-width:420px;padding:14px 18px;margin-bottom:14px">
         <div style="color:#aaa;font-size:13px;margin-bottom:10px">🏅 Best Scores</div>${br}
@@ -910,6 +935,39 @@ function draw(){
       </div>`:""}
     </div>`;
   }
+}
+
+
+// ── Global Leaderboard ────────────────────────────────────────────────────────
+async function loadGlobalLb(){
+  G.lbGlobal=true;G.globalLbData=null;draw();
+  await loadGlobalLbData();
+}
+
+async function loadGlobalLbData(){
+  try{
+    if(!window.Capacitor||!window.Capacitor.isNativePlatform())return;
+    // Use localStorage as shared storage key for global scores
+    const key='mathracer_global_lb_'+G.lbTab;
+    const stored=localStorage.getItem(key);
+    const data=stored?JSON.parse(stored):[];
+    G.globalLbData=data.sort((a,b)=>b.score-a.score).slice(0,10);
+    draw();
+  }catch(e){console.warn('Global LB error:',e);G.globalLbData=[];draw();}
+}
+
+async function submitToGlobalLb(score,accuracy,diff){
+  try{
+    if(!window.Capacitor||!window.Capacitor.isNativePlatform())return;
+    const key='mathracer_global_lb_'+diff;
+    const stored=localStorage.getItem(key);
+    const data=stored?JSON.parse(stored):[];
+    // Add this score
+    data.push({name:G.pname,score,accuracy,car:G.car.e,date:new Date().toLocaleDateString(),diff});
+    // Keep top 100
+    data.sort((a,b)=>b.score-a.score);
+    localStorage.setItem(key,JSON.stringify(data.slice(0,100)));
+  }catch(e){console.warn('Submit global LB error:',e);}
 }
 
 draw();
