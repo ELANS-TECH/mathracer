@@ -457,12 +457,12 @@ function doStartGame(){
   if(!isPractice&&!isMarathon){
     const d=DIFF[G.diff];
     const iv=isSuddenMode()?500:[750,620,500,420][d.ops.length-1];
-    const sp=isSuddenMode()?1.8:[1.4,2.0,2.7,3.1][d.ops.length-1];
+    const sp=isSuddenMode()?0.0:[1.4,2.0,2.7,3.1][d.ops.length-1];
     G.cid=setInterval(()=>{
       const np=Math.min(TL,G.cpos+Math.random()*sp);
       if(np>G.ppos)G.cpuAhead=true;
       G.cpos=np;
-      if(np>=TL&&!G.winner)endGame("cpu");
+      if(np>=TL&&!G.winner&&!isSuddenMode())endGame("cpu");
       else draw();
     },iv);
   }
@@ -513,9 +513,9 @@ function answer(choice){
     G.score+=pts;G.tc++;G.qCount++;
     if(isPractice){G.practiceTotal++;draw();setTimeout(nextQ,700);}
     else{
-      G.ppos=Math.min(TL,G.ppos+BOOST*bonus);draw();
+      if(isSuddenMode()){G.ppos=Math.min(TL,(G.qCount/50)*100);}else{G.ppos=Math.min(TL,G.ppos+BOOST*bonus);}draw();
       if(isSuddenMode()&&G.qCount>=50){setTimeout(()=>endGame("player"),700);}
-      else if((G.mode==="race"||isSuddenMode())&&G.ppos>=TL)endGame("player");
+      else if(G.mode==="race"&&G.ppos>=TL)endGame("player");
       else setTimeout(nextQ,700);
     }
   }else{
@@ -887,7 +887,7 @@ function draw(){
   else if(G.screen==="playing"){
     const isPractice=G.mode==="practice";
     const isMarathon=G.mode==="marathon";
-      const showCPU=!isPractice&&!isMarathon;
+      const showCPU=!isPractice&&!isMarathon&&!isSuddenMode();
     const dk=isMarathon?G.marathonDiff:G.diff;
     const d=DIFF[dk];
     const potPts=G.tl>0&&!isPractice?Math.max(1,Math.round((G.tl/(isSuddenMode()?10:d.time))*MXPT))*(G.streak>=3?2:1):MXPT;
