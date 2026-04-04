@@ -31,8 +31,8 @@ workflows:
           xcode-project use-profiles
       - name: Set build number
         script: |
-          BUILD_NUMBER=13
-          VERSION_NAME="1.1"
+          BUILD_NUMBER=14
+          VERSION_NAME="1.2"
           echo "Setting build number to $BUILD_NUMBER and version to $VERSION_NAME"
           PBXPROJ="ios/App/App.xcodeproj/project.pbxproj"
           sed -i "" "s/CURRENT_PROJECT_VERSION = [0-9]*/CURRENT_PROJECT_VERSION = $BUILD_NUMBER/g" "$PBXPROJ"
