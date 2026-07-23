@@ -4,14 +4,14 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <title>Math Racer 🏎️</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&family=Nunito:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overscroll-behavior:none;}
-body{background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);min-height:100vh;font-family:'Fredoka One',cursive;color:#fff;}
-button{font-family:'Fredoka One',cursive;cursor:pointer;color:#fff;border:none;transition:transform 0.12s;}
+body{background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);min-height:100vh;font-family:'Rubik',sans-serif;font-weight:700;color:#fff;letter-spacing:.2px;}
+button{font-family:'Rubik',sans-serif;cursor:pointer;color:#fff;border:none;transition:transform 0.12s;}
 button:active{transform:scale(0.95);}
-input{font-family:'Fredoka One',cursive;color:#fff;}
+input{font-family:'Rubik',sans-serif;color:#fff;}
 #app{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
 .nunito{font-family:'Nunito',sans-serif;}
 .flex-center{display:flex;align-items:center;justify-content:center;}
@@ -30,18 +30,77 @@ input{font-family:'Fredoka One',cursive;color:#fff;}
 .ac{background:#1a7a4a!important;border-color:#00ff88!important;box-shadow:0 0 18px #00ff8888!important;transform:scale(1.03);}
 .aw{background:#7a1a1a!important;border-color:#ff4444!important;box-shadow:0 0 18px #ff444488!important;transform:scale(1.03);}
 .am{background:#1a4a2a!important;border-color:#00ff88!important;box-shadow:0 0 14px #00ff8866!important;transform:scale(1.03);}
-.diff-btn{width:100%;display:flex;justify-content:space-between;align-items:center;padding:7px 12px;border-radius:12px;font-size:13px;background:linear-gradient(135deg,#2a2560,#1a1a3e);border:2px solid #4a3fa044;margin-bottom:4px;}
+.diff-btn{width:100%;display:flex;justify-content:space-between;align-items:center;padding:11px 16px;border-radius:14px;font-size:15px;background:linear-gradient(135deg,#2a2560,#1a1a3e);border:2px solid #4a3fa044;margin-bottom:7px;}
 .diff-sel{background:linear-gradient(135deg,#00c9a7,#005f56)!important;border-color:#00ff88!important;box-shadow:0 0 10px #00ff8844;}
-.mode-btn{width:100%;display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:12px;font-size:14px;background:linear-gradient(135deg,#2a2560,#1a1a3e);border:2px solid #4a3fa044;margin-bottom:5px;text-align:left;}
+.mode-btn{width:100%;display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:14px;font-size:15px;background:linear-gradient(135deg,#2a2560,#1a1a3e);border:2px solid #4a3fa044;margin-bottom:8px;text-align:left;}
 .carbtn{background:#1a1a3e;border:2px solid #4a3fa044;border-radius:14px;padding:12px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all 0.15s;cursor:pointer;}
 .carsel{background:linear-gradient(135deg,#00c9a7,#005f56)!important;border-color:#00ff88!important;box-shadow:0 0 14px #00ff8855!important;}
 .locked{opacity:0.5;cursor:default;position:relative;}
-.premium-badge{background:linear-gradient(135deg,#ffd700,#ff8c00);border-radius:20px;padding:2px 8px;font-size:10px;color:#000;font-family:'Fredoka One',cursive;}
-/* Ad banner placeholder at bottom */
-#ad-banner{position:fixed;bottom:0;left:0;right:0;height:60px;background:linear-gradient(135deg,#1a1a2e,#0f0c29);border-top:1px solid #4a3fa066;display:flex;align-items:center;justify-content:center;z-index:50;}
-.paywall-gradient{background:linear-gradient(135deg,#1a0a00,#2a1500,#1a1a3e);}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 .pulse{animation:pulse 2s infinite;}
+
+/* ── Road scene ── */
+#roadWrap{position:relative;width:100%;height:min(34vh,240px);border-radius:18px;overflow:hidden;margin-bottom:8px;border:2px solid #ffffff14;background:#000;}
+#rc{position:absolute;inset:0;width:100%;height:100%;display:block;}
+#pcar{position:absolute;bottom:4px;left:50%;width:96px;margin-left:-48px;animation:carSway 1.6s ease-in-out infinite;filter:drop-shadow(0 6px 6px #00000088);z-index:3;}
+#cpuCar{position:absolute;z-index:2;transform-origin:50% 100%;transition:top .35s linear,left .35s linear;filter:drop-shadow(0 4px 4px #00000066);}
+#cpuChip{position:absolute;left:8px;bottom:8px;background:#000000aa;border:1px solid #ff4ecb66;color:#ff9ad9;border-radius:12px;padding:3px 9px;font-size:11px;z-index:4;display:none;}
+@keyframes carSway{0%,100%{transform:translateX(-3px) translateY(0)}50%{transform:translateX(3px) translateY(-2px)}}
+@keyframes zoomP{0%,100%{transform:scale(1)}50%{transform:scale(1.015)}}
+.zoom-pulse{animation:zoomP 1s ease-in-out infinite;}
+.blink{animation:blinkA .8s steps(1) infinite;}
+@keyframes blinkA{50%{opacity:.25}}
+.flashRB{animation:rbA .5s steps(1) infinite;}
+@keyframes rbA{0%,49%{fill:#ff3b30}50%,100%{fill:#2f6bff}}
+.flameF{animation:flameA .18s ease-in-out infinite alternate;transform-origin:50% 0;}
+@keyframes flameA{from{transform:scaleY(.7)}to{transform:scaleY(1.25)}}
+/* progress bar */
+.prog{position:relative;height:12px;background:#1a1a3e;border-radius:8px;margin-bottom:10px;border:1px solid #4a3fa044;}
+.prog-f{height:100%;border-radius:8px;background:linear-gradient(90deg,#00c9a7,#00f5ff);transition:width .35s;box-shadow:0 0 10px #00f5ff66;}
+.prog-cpu{position:absolute;top:-4px;width:3px;height:20px;background:#ff4ecb;border-radius:2px;transition:left .35s;box-shadow:0 0 8px #ff4ecb;}
+.prog-flag{position:absolute;right:-2px;top:-9px;font-size:15px;}
+/* boost gauge */
+.gauge{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.gauge-bar{flex:1;height:10px;background:#1a1a3e;border-radius:6px;overflow:hidden;border:1px solid #4a3fa044;}
+.gauge-f{height:100%;border-radius:6px;background:linear-gradient(90deg,#ffb347,#ff6b35);transition:width .25s;}
+.gauge-max .gauge-f{background:linear-gradient(90deg,#ff6b35,#ff2d95);box-shadow:0 0 12px #ff6b35;}
+.gauge-tag{font-size:12px;color:#ff6b35;min-width:56px;text-align:right;}
+/* chunky 3D answer buttons */
+.abtn{width:100%;padding:14px 0 12px;font-size:22px;border-radius:14px;background:linear-gradient(180deg,#3d3788,#2a2560);border:0;border-bottom:5px solid #16133c;box-shadow:0 5px 0 #0f0d30,inset 0 1px 0 #ffffff22;transition:transform .06s,border-bottom-width .06s,box-shadow .06s;}
+.abtn:active{transform:translateY(4px);border-bottom-width:1px;box-shadow:0 1px 0 #0f0d30;}
+.ac{background:linear-gradient(180deg,#19b869,#0d7a45)!important;border-bottom-color:#06482a!important;box-shadow:0 5px 0 #05391f,0 0 18px #00ff8866!important;}
+.aw{background:linear-gradient(180deg,#d24040,#8a1f1f)!important;border-bottom-color:#4d0f0f!important;box-shadow:0 5px 0 #3d0a0a,0 0 18px #ff444466!important;}
+.am{background:linear-gradient(180deg,#1a8a55,#11603c)!important;border-bottom-color:#093521!important;box-shadow:0 5px 0 #072b1a!important;}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+/* podium */
+.podium-scene{position:relative;width:240px;height:150px;margin:0 auto 4px;}
+.pd-car{position:absolute;left:50%;width:86px;margin-left:-43px;bottom:78px;animation:dropIn .7s cubic-bezier(.2,1.4,.4,1) both;}
+.pd-trophy{position:absolute;left:50%;margin-left:-19px;bottom:150px;font-size:38px;animation:dropIn .6s .5s cubic-bezier(.2,1.4,.4,1) both;}
+@keyframes dropIn{from{opacity:0;transform:translateY(-110px)}to{opacity:1;transform:none}}
+.smoke{position:absolute;border-radius:50%;background:#888;opacity:0;animation:smokeUp 1.6s ease-out infinite;}
+@keyframes smokeUp{0%{opacity:.55;transform:translateY(0) scale(.5)}100%{opacity:0;transform:translateY(-46px) scale(1.5)}}
+/* ── Juice FX ── */
+@keyframes floatUp{0%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-80px) scale(1.5)}}
+.pts-pop{position:fixed;left:50%;top:40%;z-index:300;color:#ffd700;font-size:30px;text-shadow:0 0 14px #ffd700;pointer-events:none;animation:floatUp 1s ease-out forwards;font-family:'Rubik',sans-serif;}
+@keyframes shakeX{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(9px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.shake{animation:shakeX .4s ease;}
+@keyframes redflash{0%{opacity:.4}100%{opacity:0}}
+.flash-red{position:fixed;inset:0;background:#ff2222;z-index:250;pointer-events:none;animation:redflash .45s ease-out forwards;}
+.confetti{position:fixed;top:-14px;z-index:260;pointer-events:none;animation:confFall linear forwards;}
+@keyframes confFall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(108vh) rotate(720deg)}}
+@keyframes roadScroll{0%{background-position-x:0}100%{background-position-x:-64px}}
+.road-lines{position:absolute;left:0;right:0;top:47%;height:4px;background:repeating-linear-gradient(90deg,#ffffff1c 0 26px,transparent 26px 64px);animation:roadScroll .8s linear infinite;}
+@keyframes finishPulse{0%,100%{opacity:.8}50%{opacity:1;box-shadow:0 0 18px #ffffffcc}}
+.finish-close{animation:finishPulse .6s ease-in-out infinite;}
+@keyframes countPop{0%{transform:scale(.2);opacity:0}45%{transform:scale(1.25);opacity:1}70%{transform:scale(.95)}100%{transform:scale(1);opacity:1}}
+.count-num{animation:countPop .7s ease;font-family:'Rubik',sans-serif;}
+@keyframes starPop{0%{transform:scale(0) rotate(-40deg);opacity:0}70%{transform:scale(1.35)}100%{transform:scale(1) rotate(0);opacity:1}}
+.star-pop{display:inline-block;animation:starPop .55s ease forwards;opacity:0;font-size:42px;}
+@keyframes boostTrail{0%{opacity:.95}100%{opacity:0;transform:translate(-30px,-50%) scale(1.5)}}
+.boost{position:absolute;top:50%;transform:translateY(-50%);font-size:20px;animation:boostTrail .55s ease-out forwards;pointer-events:none;z-index:2;}
+@keyframes bestGlow{0%,100%{text-shadow:0 0 8px #ffd70066}50%{text-shadow:0 0 26px #ffd700}}
+.best-glow{animation:bestGlow 1.2s ease-in-out infinite,starPop .5s ease forwards;opacity:0;}
+.day-chip{background:linear-gradient(135deg,#ff6b3533,#1a1a3e);border:1px solid #ff6b3566;border-radius:20px;padding:3px 10px;font-size:12px;color:#ff9a63;font-family:'Nunito',sans-serif;}
 
 #splash{position:fixed;inset:0;background:#0f0c29;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;transition:opacity 0.8s ease;}
 #splash.fade-out{opacity:0;pointer-events:none;}
@@ -64,58 +123,36 @@ input{font-family:'Fredoka One',cursive;color:#fff;}
 </div>
 <div id="app"></div>
 <div id="tc"></div>
-<!-- Ad Banner — shown only for free users, replaced by real AdMob banner in Capacitor -->
-<div id="ad-banner" style="display:none">
-  <span class="nunito" style="color:#666;font-size:12px">📢 Advertisement — <span style="color:#ffd700;cursor:pointer" onclick="showPaywall('ad')">Remove ads for $1.99</span></span>
-</div>
 
 <script>
-// ═══════════════════════════════════════════════════════════════
-// ADMOB INTEGRATION GUIDE (replace stubs below with real calls)
-// ═══════════════════════════════════════════════════════════════
-// npm install @capacitor-community/admob
-// npm install @revenuecat/purchases-capacitor
-//
-// AdMob App ID (add to capacitor.config.ts):
-//   appId: 'ca-app-pub-5309223899838572~6542474848'
-//
-// Ad Unit IDs — replace YOUR_IDs below:
-const AD_UNITS = {
-  banner:       'ca-app-pub-5309223899838572/9687512932',  // bottom banner
-  interstitial: 'ca-app-pub-5309223899838572/5906440160',  // between races
-  rewarded:     'ca-app-pub-5309223899838572/7353984284',  // extra life / retry
-};
-// RevenueCat product ID (set up in App Store Connect + RevenueCat dashboard):
-const PRODUCT_ID = 'com.amine.mathracer.premium';
-// ═══════════════════════════════════════════════════════════════
-
 const TL=100,BOOST=6,PEN=-2,MXPT=20;
 const CL={p:"#00f5ff",c:"#ff4ecb",ok:"#00ff88",no:"#ff4444",g:"#ffd700"};
 
 const DIFF={
   easy:   {label:"🟢 Easy",    desc:"Addition · up to 50",       ops:["+"],             max:25,  time:12, free:true},
   medium: {label:"🟡 Medium",  desc:"Add & subtract · up to 99", ops:["+","-"],          max:50,  time:10, free:true},
-  hard:   {label:"🔴 Hard",    desc:"All ops · up to 999",        ops:["+","-","*","/"], max:99,  time:8,  free:true},
-  teacher:{label:"👩‍🏫 Teacher",desc:"All ops · up to 4 digits",  ops:["+","-","*","/"], max:999, time:6,  free:false},
+  hard:   {label:"🔴 Hard",    desc:"Adds multiply · up to 999", ops:["+","-","*"],      max:99,  time:8,  free:true},
+  teacher:{label:"👩‍🏫 Teacher",desc:"All ops · up to 4 digits",  ops:["+","-","*","/"], max:999, time:6,  free:true},
 };
 
 const MODES={
   race:    {id:"race",    icon:"🏁", label:"Race",         color:"#f7971e", desc:"Beat the CPU to the finish line",             free:true},
-  sudden:  {id:"sudden",  icon:"💀", label:"Sudden Death", color:"#ff4444", desc:"One wrong answer and it's over! Difficulty increases!",free:true},
-  practice:{id:"practice",icon:"📚", label:"Practice",     color:"#00c9a7", desc:"No CPU, no timer — drill at your own pace",    free:false},
-  marathon:{id:"marathon",icon:"🏃", label:"Marathon",     color:"#a855f7", desc:"Questions get harder · 3 strikes and you're out",free:false},
+  sudden:  {id:"sudden",  icon:"💀", label:"Sudden Death", color:"#ff4444", desc:"One wrong answer and it's over! (Teacher ops)",free:true},
+  practice:{id:"practice",icon:"📚", label:"Practice",     color:"#00c9a7", desc:"No CPU, no timer — drill at your own pace",    free:true},
+  marathon:{id:"marathon",icon:"🏃", label:"Marathon",     color:"#a855f7", desc:"Questions get harder · 3 strikes and you're out",free:true},
 };
 
 const CARS=[
-  {id:"sports",  e:"🏎️", n:"Sports",  free:true},
-  {id:"taxi",    e:"🚕", n:"Taxi",    free:true},
-  {id:"rocket",  e:"🚀", n:"Rocket",  free:false},
-  {id:"truck",   e:"🚚", n:"Truck",   free:false},
-  {id:"police",  e:"🚓", n:"Police",  free:false},
-  {id:"fire",    e:"🚒", n:"Fire",    free:false},
-  {id:"tractor", e:"🚜", n:"Tractor", free:false},
-  {id:"bike",    e:"🏍️", n:"Bike",    free:false},
+  {id:"sports",  e:"🏎️", n:"Sports",  free:true, color:"#e63946", spoiler:1},
+  {id:"taxi",    e:"🚕", n:"Taxi",    free:true, color:"#ffca3a", roof:"taxi"},
+  {id:"rocket",  e:"🚀", n:"Rocket",  free:true, color:"#c8ccd4", spoiler:1, flame:1},
+  {id:"truck",   e:"🚚", n:"Truck",   free:true, color:"#f77f00", tall:1},
+  {id:"police",  e:"🚓", n:"Police",  free:true, color:"#3a6ea5", roof:"police"},
+  {id:"fire",    e:"🚒", n:"Fire",    free:true, color:"#d62828", tall:1, roof:"ladder"},
+  {id:"tractor", e:"🚜", n:"Tractor", free:true, color:"#43a047", tall:1, bigw:1},
+  {id:"bike",    e:"🏍️", n:"Bike",    free:true, color:"#8e5cff", narrow:1},
 ];
+const CPU_SPEC={color:"#9aa3ad"};
 const CPUC=["🚗","🚙","🛻","🚐"];
 
 const ACHS=[
@@ -132,7 +169,6 @@ const ACHS=[
   {id:"survivor",   icon:"💀",name:"Survivor",        desc:"Win a Sudden Death race"},
   {id:"marathoner", icon:"🏃",name:"Marathoner",      desc:"Score 150+ pts in Marathon"},
   {id:"zen",        icon:"🧘",name:"Zen Master",      desc:"Answer 20 questions in Practice"},
-  {id:"premium",    icon:"⭐",name:"Premium Member",  desc:"Unlocked the full game"},
 ];
 
 // ── Storage ───────────────────────────────────────────────────────────────────
@@ -140,13 +176,8 @@ function ld(k,d){try{const v=localStorage.getItem("mr_"+k);return v?JSON.parse(v
 function sv(k,v){try{localStorage.setItem("mr_"+k,JSON.stringify(v));}catch(e){}}
 function rnd(n){return Math.floor(Math.random()*n);}
 
-// ── Premium state ─────────────────────────────────────────────────────────────
-// In Capacitor: replace isPremium() with a RevenueCat entitlement check
-// const { customerInfo } = await Purchases.getCustomerInfo();
-// return customerInfo.entitlements.active['premium'] !== undefined;
-function isPremium(){return ld("premium",false);}
-function setPremium(){sv("premium",true);G.premium=true;}
-function canUse(item){return item.free||isPremium();}
+
+function canUse(item){return true;}
 
 // ── Game state ────────────────────────────────────────────────────────────────
 const G={
@@ -155,252 +186,77 @@ const G={
   ppos:0, cpos:0, q:null, score:0, streak:0, maxStreak:0,
   as:{}, tl:12, busy:false, winner:null, tc:0, ta:0,
   showNext:false, showQuit:false, cpuAhead:false, newBest:false,
-  lbTab:"easy", lbGlobal:false, globalLbData:null, editName:false, nameIn:"",
+  lbTab:"easy", editName:false, nameIn:"",
   lives:3, qCount:0, practiceTotal:0, marathonDiff:"easy",
   raceCount:0,        // tracks races since last ad
-  paywallFrom:null,   // which feature triggered the paywall
-  premium:isPremium(),
   best:ld("best",{}), lb:ld("lb",[]), achs:ld("achs",[]),
   stats:ld("stats",{races:0,wins:0,totalCorrect:0,totalAnswered:0,maxStreak:0,diffWins:{}}),
-  tid:null, cid:null
+  tid:null, cid:null,
+  counting:null, boostFx:0,
+  dayStreak:ld("dayStreak",0), muted:ld("muted",false), tut:ld("tut",false)
 };
 
 function set(u){Object.assign(G,u);draw();}
 
-// ── AdMob + UMP Consent (real Capacitor implementation) ──────────────────────
+// ── Sound engine (Web Audio, zero assets) ─────────────────────────────────────
+let AC=null;
+function ac(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}if(AC&&AC.state==="suspended")AC.resume();return AC;}
+function tone(f,dur,type,vol,delay){const c=ac();if(!c||G.muted)return;try{const o=c.createOscillator(),g=c.createGain();o.type=type||"sine";o.frequency.value=f;const t=c.currentTime+(delay||0);g.gain.setValueAtTime(vol||0.14,t);g.gain.exponentialRampToValueAtTime(0.001,t+dur);o.connect(g);g.connect(c.destination);o.start(t);o.stop(t+dur+0.02);}catch(e){}}
+const sfx={
+  click(){tone(600,0.04,"square",0.05);},
+  correct(){tone(880,0.09,"sine",0.15);tone(1320,0.13,"sine",0.12,0.07);},
+  streak(){tone(988,0.08,"sine",0.13);tone(1319,0.09,"sine",0.12,0.06);tone(1568,0.14,"sine",0.11,0.12);},
+  wrong(){tone(170,0.22,"sawtooth",0.15);tone(110,0.3,"sawtooth",0.11,0.08);},
+  count(){tone(520,0.1,"square",0.13);},
+  go(){tone(784,0.2,"square",0.14);tone(1046,0.3,"square",0.12,0.1);},
+  win(){[523,659,784,1046,1318].forEach((f,i)=>tone(f,0.22,"triangle",0.16,i*0.12));},
+  lose(){[392,330,262].forEach((f,i)=>tone(f,0.3,"triangle",0.13,i*0.17));},
+};
+document.addEventListener("click",e=>{if(e.target.closest("button"))sfx.click();},true);
+function toggleMute(){G.muted=!G.muted;sv("muted",G.muted);draw();}
+
+// ── Haptics (Capacitor) ───────────────────────────────────────────────────────
+async function hap(kind){
+  if(!isCapacitor)return;
+  try{
+    const H=window.Capacitor.Plugins.Haptics;if(!H)return;
+    if(kind==="light")await H.impact({style:"LIGHT"});
+    else if(kind==="heavy")await H.impact({style:"HEAVY"});
+    else if(kind==="success")await H.notification({type:"SUCCESS"});
+    else if(kind==="error")await H.notification({type:"ERROR"});
+  }catch(e){}
+}
+
+// ── Visual FX ─────────────────────────────────────────────────────────────────
+function ptsPop(txt){const el=document.createElement("div");el.className="pts-pop";el.textContent=txt;document.body.appendChild(el);setTimeout(()=>el.remove(),1050);}
+function flashRed(){const f=document.createElement("div");f.className="flash-red";document.body.appendChild(f);setTimeout(()=>f.remove(),500);const a=document.getElementById("app");if(a){a.classList.add("shake");setTimeout(()=>a.classList.remove("shake"),450);}}
+function confetti(){const cols=["#ffd700","#00f5ff","#ff4ecb","#00ff88","#ff6b35","#a855f7"];for(let i=0;i<70;i++){const el=document.createElement("div");el.className="confetti";el.style.left=Math.random()*100+"vw";const s=(6+Math.random()*8)+"px";el.style.width=s;el.style.height=s;el.style.background=cols[rnd(cols.length)];el.style.borderRadius=Math.random()>.5?"50%":"2px";el.style.animationDuration=(1.3+Math.random()*1.7)+"s";el.style.animationDelay=(Math.random()*.4)+"s";document.body.appendChild(el);setTimeout(()=>el.remove(),3600);}}
+
+// ── Daily streak ──────────────────────────────────────────────────────────────
+function updateDailyStreak(){
+  const today=new Date().toDateString();
+  const last=ld("lastDay",null);
+  if(last===today)return;
+  const yest=new Date(Date.now()-864e5).toDateString();
+  const ns=(last===yest)?(ld("dayStreak",0)+1):1;
+  sv("dayStreak",ns);sv("lastDay",today);G.dayStreak=ns;
+  if(ns>1)showToastMsg(`🔥 Day ${ns} streak — keep it up!`);
+}
+function dismissTut(){sv("tut",true);set({tut:true});}
+
+// ── Platform detection ────────────────────────────────────────────────────────
 const isCapacitor = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
 const isIos = !!(window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'ios');
-const isAndroid = !!(window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform() === 'android');
-function isSuddenMode(){return G.mode==="sudden";}
 
-// RevenueCat API Keys
-const RC_API_KEY_IOS = 'appl_VQKwawXoMZwhjAlKWPbjPqwhtyP';
-const RC_API_KEY_ANDROID = 'goog_XuhIzifhaBaYCMDowEmIKmvfPJr';
-
-async function initRevenueCat() {
-  if (!isCapacitor) return;
-  try {
-    const { Purchases } = window.Capacitor.Plugins;
-    if (!Purchases) return;
-    const apiKey = isIos ? RC_API_KEY_IOS : RC_API_KEY_ANDROID;
-    await Purchases.configure({ apiKey });
-    // Restore premium status from RevenueCat
-    const { customerInfo } = await Purchases.getCustomerInfo();
-    if (customerInfo?.entitlements?.active?.['Elans Tech Pro']) {
-      setPremium();
-    }
-  } catch(e) { console.warn('RevenueCat init error:', e); }
-}
-
-// Called once on app start — handles GDPR consent then initializes AdMob
-async function initAdMobWithConsent() {
-  if (!isCapacitor) return; // Skip in browser preview
-  try {
-    const { AdMob, AdmobConsentStatus, AdmobConsentDebugGeography } = window.Capacitor.Plugins;
-
-    // 1. Initialize AdMob
-    await AdMob.initialize({
-      requestTrackingAuthorization: true,
-      tagForChildDirectedTreatment: false,
-      tagForUnderAgeOfConsent: false,
-    });
-
-    // 2. Request consent info (auto-detects if user is in EU)
-    const consentInfo = await AdMob.requestConsentInfo({
-      debugGeography: AdmobConsentDebugGeography.DISABLED, // Change to EEA to test EU flow
-      testDeviceIdentifiers: []
-    });
-
-    // 3. Show consent form if required (EU users)
-    if (
-      consentInfo.isConsentFormAvailable &&
-      consentInfo.status === AdmobConsentStatus.REQUIRED
-    ) {
-      await AdMob.showConsentForm();
-    }
-
-    // 4. Show banner for free users after consent is handled
-    if (!G.premium) showBannerAd();
-
-  } catch(e) {
-    console.warn("AdMob init error:", e);
-  }
-}
-
-async function showBannerAd() {
-  if (!isCapacitor) {
-    // Browser preview fallback
-    if (!G.premium) document.getElementById("ad-banner").style.display = "flex";
-    return;
-  }
-  if (G.premium) return;
-  try {
-    const { AdMob, BannerAdPosition, BannerAdSize } = window.Capacitor.Plugins;
-    await AdMob.showBanner({
-      adId: AD_UNITS.banner,
-      adSize: BannerAdSize.ADAPTIVE_BANNER,
-      position: BannerAdPosition.BOTTOM_CENTER,
-      margin: 0,
-      isTesting: false,
-    });
-  } catch(e) { console.warn("Banner error:", e); }
-}
-
-async function hideBannerAd() {
-  if (!isCapacitor) {
-    document.getElementById("ad-banner").style.display = "none";
-    return;
-  }
-  try {
-    const { AdMob } = window.Capacitor.Plugins;
-    await AdMob.removeBanner();
-  } catch(e) { console.warn("Hide banner error:", e); }
-}
-
-async function showInterstitialAd(callback) {
-  if (!isCapacitor) {
-    // Browser preview fallback
-    const tc = document.getElementById("tc");
-    tc.innerHTML = `<div style="position:fixed;inset:0;background:#000000ee;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
-      <div style="font-size:48px">📢</div>
-      <div style="font-size:22px;color:#fff">Ad Placeholder</div>
-      <div class="nunito" style="color:#ffd700;font-size:13px">Want no ads? <span style="cursor:pointer;text-decoration:underline" onclick="showPaywall('ad')">Unlock Premium $1.99</span></div>
-      <button id="ad-skip" style="background:linear-gradient(135deg,#4a3fa0,#302b63);border:2px solid #4a3fa0;border-radius:14px;padding:10px 28px;font-size:16px;margin-top:8px;opacity:0.4;cursor:default">Skip in 3s</button>
-    </div>`;
-    let t = 3;
-    const iv = setInterval(() => {
-      t--;
-      const btn = document.getElementById("ad-skip");
-      if (btn) {
-        if (t <= 0) { clearInterval(iv); btn.style.opacity="1"; btn.style.cursor="pointer"; btn.textContent="Continue →"; btn.onclick=()=>{tc.innerHTML="";if(callback)callback();}; }
-        else btn.textContent = `Skip in ${t}s`;
-      } else clearInterval(iv);
-    }, 1000);
-    return;
-  }
-  try {
-    const { AdMob } = window.Capacitor.Plugins;
-    await AdMob.prepareInterstitial({ adId: AD_UNITS.interstitial, isTesting: false });
-    await AdMob.showInterstitial();
-    if (callback) callback();
-  } catch(e) {
-    console.warn("Interstitial error:", e);
-    if (callback) callback(); // Always continue game even if ad fails
-  }
-}
-
-async function showRewardedAd(callback) {
-  if (!isCapacitor) {
-    // Browser preview fallback
-    const tc = document.getElementById("tc");
-    tc.innerHTML = `<div style="position:fixed;inset:0;background:#000000ee;z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
-      <div style="font-size:48px">🎁</div>
-      <div style="font-size:22px;color:#fff">Watch Ad for Reward</div>
-      <div class="nunito" style="color:#888;font-size:13px">Rewarded ad placeholder</div>
-      <button id="rwd-btn" style="background:linear-gradient(135deg,#f7971e,#c0392b);border:none;border-radius:14px;padding:12px 28px;font-size:16px;margin-top:8px;opacity:0.4;cursor:default">Claim in 5s</button>
-    </div>`;
-    let t = 5;
-    const iv = setInterval(() => {
-      t--;
-      const btn = document.getElementById("rwd-btn");
-      if (btn) {
-        if (t <= 0) { clearInterval(iv); btn.style.opacity="1"; btn.style.cursor="pointer"; btn.textContent="🎁 Claim Reward!"; btn.onclick=()=>{tc.innerHTML="";if(callback)callback();}; }
-        else btn.textContent = `Claim in ${t}s`;
-      } else clearInterval(iv);
-    }, 1000);
-    return;
-  }
-  try {
-    const { AdMob } = window.Capacitor.Plugins;
-    await AdMob.prepareRewardVideoAd({ adId: AD_UNITS.rewarded, isTesting: false });
-    const result = await AdMob.showRewardVideoAd();
-    if (result && callback) callback();
-  } catch(e) {
-    console.warn("Rewarded ad error:", e);
-  }
-}
-
-// ── Purchase (Capacitor In-App Purchases) ─────────────────────────────────────
-async function purchasePremium(){
-  if(!isCapacitor){
-    showToastMsg("💡 Purchases only work in the app");
-    return;
-  }
-  try {
-    const { Purchases } = window.Capacitor.Plugins;
-    if(!Purchases){
-      showToastMsg("⚠️ Purchase unavailable. Please try again later.");
-      return;
-    }
-    const offerings = await Purchases.getOfferings();
-    // Try current offering first, then fall back to default_offering
-    const offering = offerings?.current || offerings?.all?.['default_offering'];
-    const pkg = offering?.availablePackages?.[0];
-    if(!pkg){
-      showToastMsg("⚠️ Product not available. Please try again later.");
-      console.error("Offerings:", JSON.stringify(offerings));
-      return;
-    }
-    const { customerInfo } = await Purchases.purchasePackage({ aPackage: pkg });
-    if(customerInfo?.entitlements?.active?.['Elans Tech Pro']){
-      onPremiumUnlocked();
-    }
-  } catch(e) {
-    const msg = (e && (e.message || e.code || '')).toString().toLowerCase();
-    const cancelled = msg.includes('cancel') || msg === '1';
-    if(!cancelled){
-      const errDetail = e ? (e.message || e.code || JSON.stringify(e)) : 'unknown';
-      showToastMsg("Error: " + errDetail.substring(0, 120));
-    }
-    console.error("Purchase error:", e);
-  }
-}
-async function restorePurchase(){
-  if(!isCapacitor){
-    showToastMsg("💡 Restore only works in the app");
-    return;
-  }
-  try {
-    const { Purchases } = window.Capacitor.Plugins;
-    if(!Purchases){
-      showToastMsg("⚠️ Restore unavailable.");
-      return;
-    }
-    const { customerInfo } = await Purchases.restorePurchases();
-    if(customerInfo?.entitlements?.active?.['Elans Tech Pro']){
-      onPremiumUnlocked();
-      showToastMsg("✅ Purchase restored!");
-    } else {
-      showToastMsg("No previous purchase found.");
-    }
-  } catch(e) {
-    showToastMsg("Restore failed. Please try again.");
-    console.error("Restore error:", e);
-  }
-}
-function onPremiumUnlocked(){
-  setPremium();
-  hideBannerAd();
-  unlockAch("premium");
-  showToastMsg("⭐ Premium unlocked! Enjoy the full game!");
-  set({screen:"menu",paywallFrom:null});
-}
-
-// ── Paywall ───────────────────────────────────────────────────────────────────
-function showPaywall(from){if(isAndroid){showToastMsg("⭐ Premium available on iOS only");return;}set({screen:"paywall",paywallFrom:from});}
-
-// ── Question generator ────────────────────────────────────────────────────────
 function genQ(dk){
   const{ops,max}=DIFF[dk],op=ops[rnd(ops.length)];
   let a,b,ans;
-  do {
-    if(op==="+"){a=rnd(max)+1;b=rnd(max)+1;ans=a+b;}
-    else if(op==="-"){a=rnd(max)+1;b=rnd(a)+1;ans=a-b;}
-    else if(op==="*"){const l=Math.ceil(Math.sqrt(max*10));a=rnd(l)+2;b=rnd(l)+2;ans=a*b;}
-    else{b=rnd(11)+2;ans=rnd(100)+2;a=b*ans;}
-  } while(a===0||b===0||ans===0);
+  if(op==="+"){a=rnd(max+1);b=rnd(max+1-a);ans=a+b;}
+  else if(op==="-"){a=rnd(max+1);b=rnd(a+1);ans=a-b;}
+  else if(op==="*"){const l=Math.ceil(Math.sqrt(max*10));a=rnd(l)+2;b=rnd(l)+2;ans=a*b;}
+  else{b=rnd(11)+2;ans=rnd(100)+2;a=b*ans;}
   const w=new Set();
-  while(w.size<3){const d=rnd(10)+1;const c=Math.random()>.5?ans+d:Math.max(1,ans-d);if(c!==ans&&c>0)w.add(c);}
+  while(w.size<3){const d=rnd(10)+1;const c=Math.random()>.5?ans+d:Math.max(0,ans-d);if(c!==ans)w.add(c);}
   return{text:`${a} ${op} ${b} = ?`,ans,ch:[ans,...w].sort(()=>Math.random()-.5)};
 }
 function marathonDiffKey(){
@@ -408,62 +264,49 @@ function marathonDiffKey(){
   const idx=Math.min(Math.floor(G.tc/5),steps.length-1);
   return steps[idx];
 }
-function suddenDiffKey(){
-  const q=G.qCount;
-  if(q<10) return "easy";
-  if(q<20) return "medium";
-  if(q<30) return "hard";
-  return "teacher";
-}
 
 // ── Start game ────────────────────────────────────────────────────────────────
 function startGame(){
   // Check access
-  if(!canUse(MODES[G.mode])){showPaywall("mode");return;}
-  if(G.mode!=="sudden"&&!canUse(DIFF[G.diff])){showPaywall("diff");return;}
-  clearInterval(G.tid);clearInterval(G.cid);
-  // Countdown 3-2-1-GO!
-  const isPracticeCheck=G.mode==="practice";
-  if(!isPracticeCheck){
-    let count=3;
-    const tc=document.getElementById("tc")||document.body;
-    function showCount(){
-      app.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px">
-        <div style="font-size:100px;animation:splashIn 0.3s ease">${count>0?count:"🏁 GO!"}</div>
-        <div class="nunito" style="color:#888;font-size:16px">${MODES[G.mode].icon} ${MODES[G.mode].label}${G.mode!=="sudden"?" · "+DIFF[G.diff].label:""}</div>
-      </div>`;
-      if(count>0){count--;setTimeout(showCount,800);}
-      else{setTimeout(doStartGame,400);}
-    }
-    showCount();
-    return;
-  }
-  doStartGame();
-}
-function doStartGame(){
   clearInterval(G.tid);clearInterval(G.cid);
   const isPractice=G.mode==="practice";
   const isMarathon=G.mode==="marathon";
+  const isSudden=G.mode==="sudden";
   Object.assign(G,{
     screen:"playing",ppos:0,cpos:0,score:0,streak:0,maxStreak:0,
     tc:0,ta:0,winner:null,newBest:false,cpuAhead:false,
     showQuit:false,showNext:false,lives:3,qCount:0,practiceTotal:0,marathonDiff:"easy",
-    diff:G.diff,
+    diff:isSudden?"teacher":G.diff,
   });
-  // Show banner ad for free users
-  if(!G.premium&&!isPractice) showBannerAd();
-  else hideBannerAd();
+  updateDailyStreak();
+  if(isPractice){G.counting=null;nextQ();return;}
+  // 3-2-1-GO countdown
+  G.counting=3;G.q=null;draw();sfx.count();
+  const ci=setInterval(()=>{
+    G.counting--;
+    if(G.counting>0){sfx.count();hap("light");draw();}
+    else if(G.counting===0){sfx.go();hap("light");draw();}
+    else{clearInterval(ci);G.counting=null;beginRace();}
+  },750);
+}
+function beginRace(){
+  const isMarathon=G.mode==="marathon";
+  const isSudden=G.mode==="sudden";
   nextQ();
-  if(!isPractice&&!isMarathon){
-    const d=DIFF[G.diff];
-    const iv=isSuddenMode()?500:[750,620,500,420][d.ops.length-1];
-    const sp=isSuddenMode()?0.0:[1.4,2.0,2.7,3.1][d.ops.length-1];
+  if(!isMarathon){
+    const d=DIFF[isSudden?"teacher":G.diff];
+    const iv=isSudden?420:[750,620,500,420][d.ops.length-1];
+    const sp=isSudden?3.5:[1.4,2.0,2.7,3.1][d.ops.length-1];
     G.cid=setInterval(()=>{
       const np=Math.min(TL,G.cpos+Math.random()*sp);
       if(np>G.ppos)G.cpuAhead=true;
       G.cpos=np;
-      if(np>=TL&&!G.winner&&!isSuddenMode())endGame("cpu");
-      else draw();
+      if(np>=TL&&!G.winner){endGame("cpu");return;}
+      const m=document.getElementById("cpuMark");if(m)m.style.left=Math.min(99,G.cpos)+"%";
+      const st=document.getElementById("raceStatus");
+      if(st){const ahead=G.ppos>G.cpos,behind=G.cpos>G.ppos;
+        st.textContent=ahead?"🚀 You're ahead!":behind?"⚠️ CPU is catching up!":"⚡ Neck and neck!";
+        st.style.color=ahead?CL.ok:behind?CL.no:"#888";}
     },iv);
   }
 }
@@ -473,10 +316,10 @@ function nextQ(){
   clearInterval(G.tid);
   const isPractice=G.mode==="practice";
   const isMarathon=G.mode==="marathon";
-  const dk=isMarathon?marathonDiffKey():isSuddenMode()?suddenDiffKey():G.diff;
+  const dk=isMarathon?marathonDiffKey():G.diff;
   if(isMarathon)G.marathonDiff=dk;
-  const qt=isPractice?999:isSuddenMode()?10:DIFF[dk].time;
-  Object.assign(G,{q:genQ(dk),as:{},busy:false,showNext:false,tl:qt});
+  const qt=isPractice?999:DIFF[dk].time;
+  Object.assign(G,{q:genQ(dk),as:{},busy:false,showNext:false,tl:qt,qStart:Date.now(),qAnimDone:false});
   draw();
   if(!isPractice){
     G.tid=setInterval(()=>{
@@ -484,11 +327,12 @@ function nextQ(){
       if(G.tl<=0){
         clearInterval(G.tid);
         G.tl=0;G.busy=true;G.streak=0;G.ta++;
+        sfx.wrong();hap("error");flashRed();G.lastWrong=Date.now();
         if(G.q)G.as={[G.q.ans]:"m"};
         G.ppos=Math.max(0,G.ppos+PEN);
         if(isMarathon){G.lives--;if(G.lives<=0){endGame("out");return;}}
         if(G.mode==="sudden"){endGame("cpu");return;}
-        G.showNext=true;
+        setTimeout(nextQ,1100);
       }
       draw();
     },1000);
@@ -502,62 +346,51 @@ function answer(choice){
   G.busy=true;G.ta++;
   const isPractice=G.mode==="practice";
   const isMarathon=G.mode==="marathon";
-  const dk=isMarathon?marathonDiffKey():isSuddenMode()?suddenDiffKey():G.diff;
+  const isSudden=G.mode==="sudden";
+  const dk=isMarathon?marathonDiffKey():G.diff;
   if(choice===G.q.ans){
     G.as={[choice]:"c"};
     const ns=G.streak+1;G.streak=ns;
     if(ns>G.maxStreak)G.maxStreak=ns;
     const bonus=ns>=3?2:1;
-    const qt=isSuddenMode()?10:DIFF[dk].time;
+    const qt=DIFF[dk].time;
     const pts=isPractice?MXPT:Math.max(1,Math.round((G.tl/qt)*MXPT))*bonus;
     G.score+=pts;G.tc++;G.qCount++;
+    G.boostFx=Date.now();G.lastCorrect=Date.now();
+    if(bonus>1)sfx.streak();else sfx.correct();
+    hap("light");
+    ptsPop(`+${pts}${bonus>1?" 🔥":""}`);
     if(isPractice){G.practiceTotal++;draw();setTimeout(nextQ,700);}
     else{
-      if(isSuddenMode()){G.ppos=Math.min(TL,(G.qCount/50)*100);}else{G.ppos=Math.min(TL,G.ppos+BOOST*bonus);}draw();
-      if(isSuddenMode()&&G.qCount>=50){setTimeout(()=>endGame("player"),700);}
-      else if(G.mode==="race"&&G.ppos>=TL)endGame("player");
+      G.ppos=Math.min(TL,G.ppos+BOOST*bonus);draw();
+      if((G.mode==="race"||isSudden)&&G.ppos>=TL)endGame("player");
       else setTimeout(nextQ,700);
     }
   }else{
     G.as={[choice]:"w",[G.q.ans]:"m"};
-    G.streak=0;
+    G.streak=0;G.lastWrong=Date.now();
+    sfx.wrong();hap("error");flashRed();
     if(!isPractice)G.ppos=Math.max(0,G.ppos+PEN);
-    if(isSuddenMode()){draw();setTimeout(()=>endGame("sudden"),800);return;}
-    if(isMarathon){G.lives--;draw();if(G.lives<=0){setTimeout(()=>endGame("out"),800);return;}}
-    G.showNext=true;draw();
+    if(isSudden){draw();setTimeout(()=>endGame("sudden"),800);return;}
+    if(isMarathon){G.lives--;if(G.lives<=0){draw();setTimeout(()=>endGame("out"),800);return;}}
+    draw();
+    setTimeout(nextQ,1100);
   }
 }
 
-// ── Rewarded ad callbacks ─────────────────────────────────────────────────────
-function watchAdForLife(){
-  showRewardedAd(()=>{G.lives=Math.min(3,G.lives+1);showToastMsg("❤️ Life restored!");draw();});
-}
-function watchAdForRetry(){
-  showRewardedAd(()=>{
-    clearInterval(G.cid);
-    Object.assign(G,{ppos:0,cpos:0,score:0,streak:0,maxStreak:0,tc:0,ta:0,winner:null,
-      newBest:false,cpuAhead:false,showQuit:false,showNext:false,lives:3,qCount:0});
-    startGame();
-  });
-}
 
 // ── End game ──────────────────────────────────────────────────────────────────
 function endGame(w){
   if(G.winner)return;
   clearInterval(G.tid);clearInterval(G.cid);
-  hideBannerAd();
   G.winner=w;
   G.raceCount++;
+  if(w==="player"){sfx.win();hap("success");confetti();}
+  else if(w!=="quit"){sfx.lose();hap("error");}
   draw();
-  // Show interstitial every 3 races for free users
-  const showAd=!G.premium&&G.raceCount%2===0&&(w==="player"||w==="cpu");
   setTimeout(()=>{
     saveResults();
-    if(showAd){
-      showInterstitialAd(()=>set({screen:"result"}));
-    }else{
-      set({screen:"result"});
-    }
+    set({screen:"result"});
   },w==="sudden"?1200:800);
 }
 
@@ -576,7 +409,6 @@ function saveResults(){
     if(!b[lbKey]||G.score>b[lbKey]){b[lbKey]=G.score;sv("best",b);G.best=b;G.newBest=true;}
     const nl=[...G.lb,{name:G.pname,score:G.score,accuracy:acc,diff:lbKey,car:G.car.e,date:new Date().toLocaleDateString()}].sort((a,b)=>b.score-a.score).slice(0,40);
     sv("lb",nl);G.lb=nl;
-    submitToGlobalLb(G.score,acc,lbKey);
   }
   if(won)unlockAch("first_win");
   if(G.maxStreak>=5)unlockAch("streak5");
@@ -612,26 +444,174 @@ function saveName(){
 }
 function quitGame(){
   clearInterval(G.tid);clearInterval(G.cid);
-  hideBannerAd();
-  if(!G.premium && G.raceCount>0){
-    showInterstitialAd(()=>set({screen:"menu",showQuit:false,winner:null}));
-  } else {
-    set({screen:"menu",showQuit:false,winner:null});
-  }
+  set({screen:"menu",showQuit:false,winner:null});
 }
 
 
+// ═══════════════════════════════════════════════════════════════
+// ROAD ENGINE — themes, pseudo-3D renderer, SVG cars, mascot
+// ═══════════════════════════════════════════════════════════════
+const THEMES={
+  easy:   {sky:["#69b7ff","#cfeaff"], ground:["#5cb84e","#4aa53e"], road:["#6e6e72","#646468"], stripe:"#ffffff", rumble:["#e9e9e9","#d64545"], sun:{x:.8,y:.30,c:"#ffe066",r:26}, deco:"clouds"},
+  medium: {sky:["#3b1d5e","#ff9548"], ground:["#d19a58","#c08a47"], road:["#705c48","#66533f"], stripe:"#ffe9a8", rumble:["#f2d29b","#b8743a"], sun:{x:.5,y:.6,c:"#ff5e3a",r:36}, deco:"dunes"},
+  hard:   {sky:["#040112","#31104e"], ground:["#0d0d20","#0a0a1a"], road:["#20203a","#1a1a30"], stripe:"#00f5ff", rumble:["#ff2ec4","#131330"], sun:null, deco:"city"},
+  teacher:{sky:["#000012","#070730"], ground:["#07071e","#050518"], road:["#2a2a52","#222244"], stripe:"#ffd700", rumble:["#8a6dff","#0c0c26"], sun:{x:.18,y:.28,c:"#cdd8ff",r:16}, deco:"stars"},
+};
+function themeKey(){
+  if(G.mode==="marathon")return DIFF[G.marathonDiff]?G.marathonDiff:"easy";
+  if(G.mode==="sudden")return "teacher";
+  return DIFF[G.diff]?G.diff:"easy";
+}
+const R={cam:0,speed:1.2,last:0,deco:{}};
+function getDeco(key,w,h){
+  const id=key+"_"+w;
+  if(R.deco[id])return R.deco[id];
+  const arr=[];
+  if(key==="easy"){for(let i=0;i<6;i++)arr.push({x:Math.random()*w,y:h*(0.05+Math.random()*0.18),s:0.6+Math.random()*0.9});}
+  else if(key==="medium"){for(let i=0;i<5;i++)arr.push({x:Math.random()*w,w:60+Math.random()*120,h:14+Math.random()*26});}
+  else if(key==="hard"){let x=0;while(x<w*1.2){const bw=22+Math.random()*38,bh=24+Math.random()*70;arr.push({x,w:bw,h:bh,seed:Math.floor(Math.random()*9999)});x+=bw+4+Math.random()*14;}}
+  else {for(let i=0;i<70;i++)arr.push({x:Math.random()*w,y:Math.random()*h*0.32,tw:Math.random()*6.28,s:Math.random()<.15?2:1});}
+  R.deco[id]=arr;return arr;
+}
+function drawRoad(cv){
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  const cw=cv.clientWidth,ch=cv.clientHeight;
+  if(cv.width!==cw*dpr||cv.height!==ch*dpr){cv.width=cw*dpr;cv.height=ch*dpr;}
+  const x=cv.getContext("2d");x.setTransform(dpr,0,0,dpr,0,0);
+  const w=cw,h=ch,hor=h*0.34,key=themeKey(),T=THEMES[key];
+  // SKY
+  const sg=x.createLinearGradient(0,0,0,hor);sg.addColorStop(0,T.sky[0]);sg.addColorStop(1,T.sky[1]);
+  x.fillStyle=sg;x.fillRect(0,0,w,hor+1);
+  if(T.sun){x.save();x.fillStyle=T.sun.c;x.shadowColor=T.sun.c;x.shadowBlur=28;x.beginPath();x.arc(w*T.sun.x,hor*T.sun.y*2.6,T.sun.r,0,6.29);x.fill();x.restore();}
+  const deco=getDeco(key,w,h);
+  if(key==="easy"){x.fillStyle="#ffffffee";deco.forEach(cl=>{cl.x-=R.speed*0.05;if(cl.x<-80)cl.x=w+60;const s=cl.s;
+    x.beginPath();x.arc(cl.x,cl.y,12*s,0,6.29);x.arc(cl.x+14*s,cl.y+3*s,9*s,0,6.29);x.arc(cl.x-14*s,cl.y+4*s,9*s,0,6.29);x.fill();});}
+  else if(key==="medium"){x.fillStyle="#00000055";deco.forEach(d=>{d.x-=R.speed*0.03;if(d.x<-d.w)d.x=w+20;
+    x.beginPath();x.moveTo(d.x,hor);x.quadraticCurveTo(d.x+d.w/2,hor-d.h,d.x+d.w,hor);x.fill();});}
+  else if(key==="hard"){deco.forEach(b=>{b.x-=R.speed*0.06;if(b.x<-b.w)b.x=w+10;
+    x.fillStyle="#0b0b1c";x.fillRect(b.x,hor-b.h,b.w,b.h);
+    let s=b.seed;for(let wy=hor-b.h+4;wy<hor-3;wy+=7)for(let wx=b.x+3;wx<b.x+b.w-4;wx+=7){s=(s*9301+49297)%233280;if(s/233280<0.4){x.fillStyle=(s%2?"#ffd700":"#00f5ff");x.fillRect(wx,wy,2.5,3.5);}}});}
+  else {x.fillStyle="#fff";deco.forEach(st=>{st.tw+=0.05;const a=0.35+0.65*Math.abs(Math.sin(st.tw));x.globalAlpha=a;x.fillRect(st.x,st.y,st.s,st.s);});x.globalAlpha=1;
+    x.save();x.fillStyle="#b48cff";x.shadowColor="#b48cff";x.shadowBlur=18;x.beginPath();x.arc(w*0.85,hor*0.5,13,0,6.29);x.fill();x.globalAlpha=.4;x.beginPath();x.ellipse(w*0.85,hor*0.5,22,5,-.4,0,6.29);x.fill();x.restore();}
+  // ROAD slices
+  const curve=Math.sin(R.cam*0.004)*w*0.10;
+  for(let y=Math.floor(hor);y<=h;y+=2){
+    const t=(y-hor)/(h-hor);
+    const depth=R.cam*0.9+40/(t+0.03);
+    const band=Math.floor(depth/7)%2;
+    const half=t*w*0.46+4;
+    const cx=w/2+curve*(1-t)*(1-t);
+    x.fillStyle=T.ground[band];x.fillRect(0,y,w,2);
+    const rum=Math.max(3,half*0.09);
+    x.fillStyle=T.rumble[band];x.fillRect(cx-half-rum,y,half*2+rum*2,2);
+    x.fillStyle=T.road[band];x.fillRect(cx-half,y,half*2,2);
+    if(band===0){const sw=Math.max(1.5,t*6);x.fillStyle=T.stripe;x.fillRect(cx-sw/2,y,sw,2);}
+    const ew=Math.max(1,t*3);x.fillStyle="#ffffffbb";x.fillRect(cx-half+ew,y,ew,2);x.fillRect(cx-half*1+half*2-ew*2,y,ew,2);
+  }
+  // FINISH banner
+  const raceMode=(G.mode==="race"||G.mode==="sudden");
+  if(G.screen==="playing"&&raceMode&&(TL-G.ppos)<20&&G.counting==null){
+    const bt=Math.min(0.9,(20-(TL-G.ppos))/20*0.9+0.05);
+    const y=hor+bt*(h-hor),t=bt,half=t*w*0.46+4,cx=w/2+curve*(1-t)*(1-t);
+    const bh=Math.max(6,t*22);
+    for(let i=0;i<10;i++){x.fillStyle=i%2?"#111":"#fff";x.fillRect(cx-half+i*(half*2/10),y-bh,half*2/10+1,bh);}
+    x.fillStyle="#ddd";x.fillRect(cx-half-3,y-bh-t*30,3,bh+t*30);x.fillRect(cx+half,y-bh-t*30,3,bh+t*30);
+  }
+}
+function posCPU(){
+  const wrap=document.getElementById("roadWrap");if(!wrap)return;
+  const el=document.getElementById("cpuCar"),chip=document.getElementById("cpuChip");
+  if(!el)return;
+  const w=wrap.clientWidth,h=wrap.clientHeight,hor=h*0.34;
+  const rel=G.cpos-G.ppos;
+  if(rel<-2){el.style.display="none";if(chip){chip.style.display="block";chip.textContent="🚗 CPU "+Math.round(-rel)+"% behind";}return;}
+  if(chip)chip.style.display="none";
+  el.style.display="block";
+  const t=Math.max(0.16,Math.min(0.92,1-rel/32));
+  const curve=Math.sin(R.cam*0.004)*w*0.10;
+  const half=t*w*0.46+4;
+  const cx=w/2+curve*(1-t)*(1-t)-half*0.35;
+  const sc=0.28+0.72*t;
+  el.style.left=(cx-34)+"px";
+  el.style.top=(hor+t*(h-hor)-58*sc)+"px";
+  el.style.transform="scale("+sc.toFixed(3)+")";
+}
+function roadLoop(ts){
+  requestAnimationFrame(roadLoop);
+  const cv=document.getElementById("rc");
+  const dt=Math.min(50,ts-(R.last||ts));R.last=ts;
+  if(!cv)return;
+  let tgt=1.2;
+  if(G.screen==="playing"&&G.counting==null){
+    tgt=4+(G.streak>=3?5:Math.min(3.5,G.streak*1.2));
+    if(Date.now()-(G.lastWrong||0)<700)tgt=0.8;
+  }
+  R.speed+=(tgt-R.speed)*0.045;
+  R.cam+=R.speed*dt*0.08;
+  drawRoad(cv);
+  posCPU();
+}
+requestAnimationFrame(roadLoop);
 
-
-
+// ── SVG car builder (back view) ───────────────────────────────────────────────
+function shade(hex,f){const n=parseInt(hex.slice(1),16);let r=(n>>16)+f,g=((n>>8)&255)+f,b=(n&255)+f;
+  r=Math.max(0,Math.min(255,r));g=Math.max(0,Math.min(255,g));b=Math.max(0,Math.min(255,b));
+  return "#"+((r<<16)|(g<<8)|b).toString(16).padStart(6,"0");}
+function carBackSVG(s,px){
+  px=px||96;const col=s.color||"#e63946",dark=shade(col,-45),lite=shade(col,40);
+  const tall=s.tall?14:0, bodyY=26-tall, bodyH=26+tall;
+  let inner="";
+  // shadow
+  inner+=`<ellipse cx="48" cy="62" rx="34" ry="5" fill="#000" opacity=".35"/>`;
+  if(s.narrow){
+    inner+=`<rect x="42" y="46" width="12" height="16" rx="5" fill="#222"/><rect x="45" y="49" width="6" height="10" rx="3" fill="#555"/>
+      <rect x="40" y="30" width="16" height="18" rx="6" fill="${col}"/>
+      <circle cx="48" cy="24" r="9" fill="${lite}"/><rect x="41" y="22" width="14" height="6" rx="3" fill="#1a1a2e"/>
+      <circle cx="44" cy="42" r="2.6" fill="#ff3b30" class="blink"/><circle cx="52" cy="42" r="2.6" fill="#ff3b30" class="blink"/>`;
+  }else{
+    const wY=s.bigw?38:44, wH=s.bigw?22:16, wW=s.bigw?15:12;
+    inner+=`<rect x="${16-(s.bigw?3:0)}" y="${wY}" width="${wW}" height="${wH}" rx="5" fill="#1c1c1c"/><rect x="${65+(s.bigw?3:0)- (s.bigw?0:0)}" y="${wY}" width="${wW}" height="${wH}" rx="5" fill="#1c1c1c"/>
+      <rect x="${19-(s.bigw?3:0)}" y="${wY+4}" width="${wW-6}" height="${wH-8}" rx="3" fill="#555"/><rect x="${68+(s.bigw?3:0)}" y="${wY+4}" width="${wW-6}" height="${wH-8}" rx="3" fill="#555"/>`;
+    inner+=`<rect x="22" y="${bodyY}" width="52" height="${bodyH+8}" rx="9" fill="${col}"/>
+      <rect x="22" y="${bodyY}" width="52" height="8" rx="6" fill="${lite}"/>
+      <rect x="30" y="${bodyY+7}" width="36" height="${12+(tall?6:0)}" rx="5" fill="#101828"/>
+      <rect x="24" y="${bodyY+bodyH-2}" width="48" height="9" rx="4" fill="${dark}"/>
+      <rect x="38" y="${bodyY+bodyH+0}" width="20" height="6" rx="2" fill="#e8e8e8"/><text x="48" y="${bodyY+bodyH+5}" font-size="4.6" text-anchor="middle" fill="#333" font-family="Rubik">MATH</text>
+      <circle cx="28" cy="${bodyY+bodyH-6}" r="3" fill="#ff3b30" class="blink"/><circle cx="68" cy="${bodyY+bodyH-6}" r="3" fill="#ff3b30" class="blink"/>`;
+    if(s.spoiler)inner+=`<rect x="26" y="${bodyY-7}" width="6" height="8" fill="${dark}"/><rect x="64" y="${bodyY-7}" width="6" height="8" fill="${dark}"/><rect x="20" y="${bodyY-10}" width="56" height="5" rx="2.5" fill="${dark}"/>`;
+    if(s.roof==="taxi")inner+=`<rect x="36" y="${bodyY-9}" width="24" height="9" rx="3" fill="#ffd60a"/><text x="48" y="${bodyY-2}" font-size="6.5" text-anchor="middle" fill="#111" font-family="Rubik" font-weight="800">TAXI</text>`;
+    if(s.roof==="police")inner+=`<rect x="34" y="${bodyY-7}" width="13" height="7" rx="2" class="flashRB"/><rect x="49" y="${bodyY-7}" width="13" height="7" rx="2" fill="#2f6bff" class="flashRB" style="animation-delay:.25s"/>`;
+    if(s.roof==="ladder")inner+=`<rect x="24" y="${bodyY-6}" width="48" height="4" rx="2" fill="#cfd4da"/><rect x="30" y="${bodyY-6}" width="3" height="4" fill="#8a9099"/><rect x="46" y="${bodyY-6}" width="3" height="4" fill="#8a9099"/><rect x="62" y="${bodyY-6}" width="3" height="4" fill="#8a9099"/>`;
+    if(s.flame)inner+=`<g class="flameF"><path d="M40 ${bodyY+bodyH+9} q4 12 8 0 q4 12 8 0" fill="#ff9f1c"/><path d="M43 ${bodyY+bodyH+9} q3 8 5 0 q3 8 5 0" fill="#ffd60a"/></g>`;
+  }
+  return `<svg viewBox="0 0 96 68" width="${px}" height="${Math.round(px*68/96)}" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+}
+// ── Mascot ────────────────────────────────────────────────────────────────────
+function mascotSVG(){
+  const now=Date.now();
+  let st="idle";
+  if(now-(G.lastCorrect||0)<900)st="happy";
+  else if(now-(G.lastWrong||0)<900)st="shock";
+  else if(G.cpuAhead&&(G.mode==="race"||G.mode==="sudden")&&G.screen==="playing")st="sweat";
+  const hel=G.car.color||"#e63946";
+  let face="";
+  if(st==="happy")face=`<path d="M13 21 q6 7 12 0" stroke="#5a3a26" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="14" cy="16" r="1.8" fill="#333"/><circle cx="24" cy="16" r="1.8" fill="#333"/><text x="31" y="10" font-size="9">✨</text>`;
+  else if(st==="shock")face=`<ellipse cx="19" cy="22" rx="3.4" ry="4.4" fill="#5a3a26"/><circle cx="14" cy="15" r="2.4" fill="#333"/><circle cx="24" cy="15" r="2.4" fill="#333"/>`;
+  else if(st==="sweat")face=`<path d="M14 22 q5 -3 10 0" stroke="#5a3a26" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="14" cy="16" r="1.8" fill="#333"/><circle cx="24" cy="16" r="1.8" fill="#333"/><path d="M30 12 q3 4 0 6 q-3 -2 0 -6" fill="#4fc3f7"/>`;
+  else face=`<path d="M14 21 q5 3.5 10 0" stroke="#5a3a26" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="14" cy="16" r="1.8" fill="#333"/><circle cx="24" cy="16" r="1.8" fill="#333"/>`;
+  return `<svg viewBox="0 0 38 30" width="40" height="32"><circle cx="19" cy="17" r="12" fill="#ffd9b3"/><path d="M6.5 15 a12.5 12.5 0 0 1 25 0 l0 -2 a12.5 10 0 0 0 -25 0 z" fill="${hel}"/><path d="M6 14 h26 v3 h-26 z" fill="${shade(hel,-40)}"/>${face}</svg>`;
+}
 
 // ── Render helpers ────────────────────────────────────────────────────────────
 function track(pos,color,label,emoji,flip){
   const pct=Math.min((pos/TL)*100,97);
-  const stripes=Array.from({length:12},(_,i)=>`<div style="position:absolute;left:${i*8+4}%;top:44%;width:24px;height:3px;background:#ffffff10;border-radius:2px"></div>`).join("");
-  return `<div class="track" style="border:2px solid ${color}33">${stripes}
-    <div style="position:absolute;right:6px;top:0;bottom:0;width:6px;background:repeating-linear-gradient(180deg,#fff 0,#fff 7px,#000 7px,#000 14px);border-radius:3px;opacity:.8"></div>
+  const close=pos>=TL*0.8;
+  const boost=(label==="YOU"&&G.boostFx&&Date.now()-G.boostFx<600);
+  return `<div class="track" style="border:2px solid ${color}33">
+    <div class="road-lines"></div>
+    <div class="${close?"finish-close":""}" style="position:absolute;right:6px;top:0;bottom:0;width:6px;background:repeating-linear-gradient(180deg,#fff 0,#fff 7px,#000 7px,#000 14px);border-radius:3px;opacity:.8"></div>
     <div style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:${color}aa;font-size:12px">${label}</div>
+    ${boost?`<div class="boost" style="left:${Math.max(0,pct-7)}%">🔥</div>`:""}
     <div class="tcar" style="left:${pct}%;filter:drop-shadow(0 0 7px ${color});transform:translateY(-50%) scaleX(-1)">${emoji}</div>
   </div>`;
 }
@@ -648,7 +628,6 @@ function livesHTML(n){
   return Array.from({length:3},(_,i)=>`<span style="font-size:20px;opacity:${i<n?1:.2}">❤️</span>`).join("");
 }
 function lockBadge(){return `<span style="font-size:16px">🔒</span>`;}
-function premiumPill(){return `<span class="premium-badge">PRO</span>`;}
 
 // ═══════════════════════════════════════════════════════════════
 // DRAW
@@ -656,62 +635,30 @@ function premiumPill(){return `<span class="premium-badge">PRO</span>`;}
 function draw(){
   const app=document.getElementById("app");
 
-  // ── PAYWALL ────────────────────────────────────────────────────────────────
-  if(G.screen==="paywall"){
-    const features=[
-      {icon:"🟡",text:"Medium difficulty"},
-      {icon:"👩‍🏫",text:"Teacher difficulty"},
-      {icon:"💀",text:"Sudden Death mode"},
-      {icon:"📚",text:"Practice mode"},
-      {icon:"🏃",text:"Marathon mode"},
-      {icon:"🚗",text:"All 8 cars"},
-      {icon:"🚫",text:"No ads — ever"},
-    ];
-    const featureList=features.map(f=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-      <span style="font-size:22px">${f.icon}</span>
-      <span class="nunito" style="font-size:15px;color:#ddd">${f.text}</span>
-      <span style="margin-left:auto;color:${CL.ok};font-size:16px">✅</span>
-    </div>`).join("");
-    app.innerHTML=`<div style="width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center">
-      <div style="font-size:64px;margin-bottom:8px" class="pulse">⭐</div>
-      <h1 style="color:${CL.g};font-size:36px;margin-bottom:4px;text-shadow:0 0 20px #ffd70088">Unlock Full Game</h1>
-      <p class="nunito" style="color:#888;font-size:14px;margin-bottom:22px;text-align:center">One-time purchase · No subscription</p>
-
-      <div class="card" style="width:100%;padding:18px 20px;margin-bottom:20px">
-        <p style="color:#aaa;font-size:13px;margin-bottom:14px;letter-spacing:1px">EVERYTHING UNLOCKED:</p>
-        ${featureList}
-      </div>
-
-      <button onclick="purchasePremium()" style="width:100%;background:linear-gradient(135deg,#ffd700,#ff8c00);border:none;border-radius:18px;padding:16px 0;font-size:24px;color:#000;margin-bottom:12px;box-shadow:0 0 28px #ffd70066" class="pulse">
-        🔓 Unlock for $1.99
-      </button>
-
-      <button onclick="restorePurchase()" style="width:100%;background:transparent;border:1px solid #4a3fa0;border-radius:14px;padding:11px 0;font-size:15px;color:#888;margin-bottom:16px">
-        Restore Previous Purchase
-      </button>
-
-      <button onclick="set({screen:'menu'})" style="background:transparent;border:none;color:#555;font-size:14px">
-        ← Maybe later
-      </button>
-    </div>`;
-    return;
-  }
-
   // ── MENU ───────────────────────────────────────────────────────────────────
   if(G.screen==="menu"){
-    hideBannerAd();
-    const nameEl=G.editName
+      const nameEl=G.editName
       ?`<div style="display:flex;align-items:center;gap:8px"><input id="ni" value="${G.nameIn}" maxlength="14" onkeydown="if(event.key==='Enter')saveName()" style="background:#1a1a3e;border:2px solid ${CL.p};border-radius:10px;padding:6px 12px;font-size:16px;outline:none;width:130px"/><button onclick="saveName()" style="background:linear-gradient(135deg,#00c853,#00695c);border-radius:14px;padding:6px 14px;font-size:14px">✓</button></div>`
-      :`<div style="display:flex;align-items:center;gap:8px">
+      :`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center">
           <div onclick="set({editName:true,nameIn:'${G.pname}'})" style="color:${CL.p};font-family:'Nunito',sans-serif;font-size:14px;cursor:pointer;border-bottom:1px dashed ${CL.p}55">👤 ${G.pname} ✏️</div>
-          ${G.premium?`<span class="premium-badge">⭐ PRO</span>`:""}
+          ${G.dayStreak>0?`<span class="day-chip">🔥 Day ${G.dayStreak}</span>`:""}
+          <button onclick="toggleMute()" style="background:#1a1a3e;border:1px solid #4a3fa055;border-radius:10px;width:30px;height:30px;font-size:14px;padding:0">${G.muted?"🔇":"🔊"}</button>
         </div>`;
+
+    const tutOv=!G.tut?`<div class="overlay"><div style="background:linear-gradient(135deg,#1a1a3e,#2a2560);border-radius:24px;padding:26px 22px;max-width:340px;width:100%;border:2px solid ${CL.g}55">
+      <div style="text-align:center;font-size:46px;margin-bottom:6px">🏎️</div>
+      <h2 style="text-align:center;font-size:24px;margin-bottom:16px;color:${CL.g}">How to Play</h2>
+      <div class="nunito" style="font-size:14px;color:#ddd;line-height:1.7;margin-bottom:8px"><span style="font-size:20px">🎮</span> Pick a <b>mode</b> and <b>difficulty</b>, then hit Play</div>
+      <div class="nunito" style="font-size:14px;color:#ddd;line-height:1.7;margin-bottom:8px"><span style="font-size:20px">⚡</span> Answer <b>fast</b> — the quicker you are, the more points and the bigger your car's boost</div>
+      <div class="nunito" style="font-size:14px;color:#ddd;line-height:1.7;margin-bottom:18px"><span style="font-size:20px">🔥</span> Get a <b>3+ streak</b> for a <b>2× boost</b> — but wrong answers slow you down!</div>
+      <button onclick="dismissTut()" style="width:100%;background:linear-gradient(135deg,#f7971e,#c0392b);border-radius:16px;padding:13px 0;font-size:19px">Let's race! 🏁</button>
+    </div></div>`:"";
 
     const modeBtns=Object.values(MODES).map(m=>{
       const sel=G.mode===m.id;
       const locked=!canUse(m);
-      return `<button class="mode-btn" style="border-color:${sel?m.color+"99":"#4a3fa044"};background:${sel?`linear-gradient(135deg,${m.color}22,#1a1a3e)`:"linear-gradient(135deg,#2a2560,#1a1a3e)"};opacity:${locked&&!sel?0.7:1}" onclick="${locked?"showPaywall('mode')":"set({mode:'"+m.id+"'})"}">
-        <span style="font-size:20px">${m.icon}</span>
+      return `<button class="mode-btn" style="border-color:${sel?m.color+"99":"#4a3fa044"};background:${sel?`linear-gradient(135deg,${m.color}22,#1a1a3e)`:"linear-gradient(135deg,#2a2560,#1a1a3e)"};opacity:${locked&&!sel?0.7:1}" onclick="set({mode:'${m.id}'})">
+        <span style="font-size:26px">${m.icon}</span>
         <span style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;flex:1">
           <span style="color:${sel?m.color:"#fff"};font-size:16px">${m.label}</span>
           <span class="nunito" style="color:#888;font-size:11px">${m.desc}</span>
@@ -725,34 +672,23 @@ function draw(){
       const sel=G.diff===k;
       const locked=!canUse(d);
       const bs=G.best[k]?`<span class="nunito" style="color:#ffd700;font-size:11px">⭐${G.best[k]}</span>`:"";
-      return `<button class="diff-btn${sel?" diff-sel":""}" style="opacity:${locked?0.65:1}" onclick="${locked?"showPaywall('diff')":"set({diff:'"+k+"'})"}">${d.label}
+      return `<button class="diff-btn${sel?" diff-sel":""}" style="opacity:${locked?0.65:1}" onclick="set({diff:'${k}'})">${d.label}
         <span style="display:flex;align-items:center;gap:6px">${bs}<span class="nunito" style="color:#bbb;font-size:11px">${d.desc}</span>${locked?lockBadge():""}</span>
       </button>`;
     }).join("")}</div>`:"";
 
     const modeColor=MODES[G.mode].color;
-    app.innerHTML=`<div style="width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;padding:6px 0">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:2px">
-        <div style="font-size:36px;filter:drop-shadow(0 0 10px ${CL.p});transform:scaleX(-1)">${G.car.e}</div>
-        <h1 style="color:${CL.g};font-size:32px;margin:0;text-shadow:0 0 18px #ffd70088;letter-spacing:2px">MATH RACER</h1>
-      </div>
-      <div style="margin:4px 0 8px">${nameEl}</div>
+    app.innerHTML=`${tutOv}<div style="width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center">
+      <div style="font-size:56px;filter:drop-shadow(0 0 14px ${CL.p});transform:scaleX(-1);margin-bottom:4px">${G.car.e}</div>
+      <h1 style="color:${CL.g};font-size:40px;margin:2px 0;text-shadow:0 0 22px #ffd70088;letter-spacing:2px">MATH RACER</h1>
+      <div style="margin:8px 0 14px">${nameEl}</div>
 
-      ${!G.premium?`<button onclick="showPaywall('banner')" style="width:100%;background:linear-gradient(135deg,#2a1500,#1a1a3e);border:1px solid ${CL.g}55;border-radius:12px;padding:7px 12px;display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:18px">⭐</span>
-        <span style="display:flex;flex-direction:column;align-items:flex-start">
-          <span style="font-size:13px;color:${CL.g}">Unlock Full Game — $1.99</span>
-          <span class="nunito" style="font-size:10px;color:#888">All modes · All cars · No ads</span>
-        </span>
-        <span style="margin-left:auto;color:${CL.g}">→</span>
-      </button>`:""}
-
-      <p style="color:#aaa;font-size:11px;margin-bottom:5px;letter-spacing:1px">GAME MODE</p>
-      <div style="width:100%;margin-bottom:6px">${modeBtns}</div>
+      <p style="color:#aaa;font-size:12px;margin-bottom:8px;letter-spacing:1px">GAME MODE</p>
+      <div style="width:100%;margin-bottom:10px">${modeBtns}</div>
       ${diffBtns}
-      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0">
         <button class="btn" style="background:linear-gradient(135deg,#4a3fa0,#302b63);border:2px solid ${CL.p}44" onclick="set({screen:'car'})">🚗 Car</button>
-        <button class="btn" style="background:linear-gradient(135deg,${modeColor},#1a0a0a);font-size:18px;padding:10px 26px;box-shadow:0 4px 18px ${modeColor}55" onclick="startGame()">${MODES[G.mode].icon} Play!</button>
+        <button class="btn" style="background:linear-gradient(135deg,${modeColor},#1a0a0a);font-size:20px;padding:12px 32px;box-shadow:0 4px 22px ${modeColor}55" onclick="startGame()">${MODES[G.mode].icon} Play!</button>
         <button class="btn" style="background:linear-gradient(135deg,#4a3fa0,#302b63);border:2px solid ${CL.g}44" onclick="set({screen:'lb'})">🏆 Board</button>
         <button class="btn" style="background:linear-gradient(135deg,#4a3fa0,#302b63);border:2px solid ${CL.g}44" onclick="set({screen:'ach'})">🎖️ Badges</button>
         <button class="btn" style="background:linear-gradient(135deg,#4a3fa0,#302b63);border:2px solid ${CL.p}44" onclick="set({screen:'stats'})">📊 Stats</button>
@@ -766,15 +702,14 @@ function draw(){
     const grid=CARS.map(c=>{
       const locked=!canUse(c);
       const sel=G.car.id===c.id;
-      return `<button class="carbtn${sel?" carsel":""}" style="opacity:${locked?0.55:1}" onclick="${locked?"showPaywall('car')":"set({car:"+JSON.stringify(c)+"})"}" >
-        <span style="font-size:30px;display:inline-block;transform:scaleX(-1)">${c.e}</span>
+      return `<button class="carbtn${sel?" carsel":""}" onclick="set({car:${JSON.stringify(c).replace(/"/g,"&quot;")}})">
+        <span style="line-height:0">${carBackSVG(c,56)}</span>
         <span class="nunito" style="color:#ccc;font-size:10px">${c.n}</span>
-        ${locked?`<span style="font-size:12px">🔒</span>`:""}
       </button>`;
     }).join("");
     app.innerHTML=`<div style="width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center">
       <h2 style="color:${CL.g};font-size:30px;margin-bottom:4px">🚗 Pick Your Car</h2>
-      <p class="nunito" style="color:#888;font-size:13px;margin-bottom:6px">Free: 2 cars &nbsp;·&nbsp; ${G.premium?"All unlocked ⭐":`<span style="color:${CL.g};cursor:pointer" onclick="showPaywall('car')">Unlock all for $1.99</span>`}</p>
+      <p class="nunito" style="color:#888;font-size:13px;margin-bottom:6px">Pick your ride! 🏁</p>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:380px;margin-bottom:20px;margin-top:12px">${grid}</div>
       <div style="font-size:50px;margin-bottom:6px;filter:drop-shadow(0 0 12px ${CL.p});transform:scaleX(-1)">${G.car.e}</div>
       <p class="nunito" style="color:${CL.p};margin-bottom:18px;font-size:14px">Selected: ${G.car.n}</p>
@@ -824,17 +759,15 @@ function draw(){
   // ── STATS ──────────────────────────────────────────────────────────────────
   else if(G.screen==="stats"){
     const st=G.stats,wr=st.races>0?Math.round(st.wins/st.races*100):0,ac=st.totalAnswered>0?Math.round(st.totalCorrect/st.totalAnswered*100):0;
-    const losses=(st.races||0)-(st.wins||0);
     const sc=(i,l,v,c)=>`<div style="background:#1a1a3e;border:1px solid #4a3fa044;border-radius:16px;padding:12px 8px;text-align:center"><div style="font-size:26px">${i}</div><div style="color:${c||"#fff"};font-size:20px">${v}</div><div class="nunito" style="color:#888;font-size:10px">${l}</div></div>`;
     const allKeys={...DIFF,marathon:{label:"🏃 Marathon"},sudden:{label:"💀 Sudden Death"}};
     const br=Object.entries(allKeys).map(([k,d])=>`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span class="nunito" style="color:#ccc;font-size:13px">${d.label}</span><span style="color:${G.best[k]?CL.g:"#444"};font-size:15px">${G.best[k]?`⭐ ${G.best[k]}`:"—"}</span></div>`).join("");
     app.innerHTML=`<div style="width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;padding-top:28px;min-height:100vh;justify-content:flex-start">
       <h2 style="color:${CL.g};font-size:30px;margin-bottom:4px">📊 My Stats</h2>
-      <p class="nunito" style="color:#666;font-size:13px;margin-bottom:16px">👤 ${G.pname} ${G.premium?'<span class="premium-badge">⭐ PRO</span>':""}</p>
+      <p class="nunito" style="color:#666;font-size:13px;margin-bottom:16px">👤 ${G.pname}</p>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;width:100%;max-width:420px;margin-bottom:14px">
-        ${sc("🏁","Races",st.races)}${sc("🏆","Wins",st.wins,CL.g)}${sc("💔","Losses",losses,"#ff4444")}
-        ${sc("📈","Win Rate",wr+"%",CL.ok)}${sc("🎯","Accuracy",ac+"%",CL.p)}${sc("🔥","Best Streak",st.maxStreak,"#ff6b35")}
-        ${sc("✅","Correct",st.totalCorrect)}${sc("❌","Wrong",(st.totalAnswered||0)-(st.totalCorrect||0),"#ff4444")}${sc("📝","Answered",st.totalAnswered||0)}
+        ${sc("🏁","Races",st.races)}${sc("🏆","Wins",st.wins,CL.g)}${sc("📈","Win Rate",wr+"%",CL.ok)}
+        ${sc("✅","Correct",st.totalCorrect)}${sc("🎯","Accuracy",ac+"%",CL.p)}${sc("🔥","Best Streak",st.maxStreak,"#ff6b35")}
       </div>
       <div class="card" style="width:100%;max-width:420px;padding:14px 18px;margin-bottom:14px">
         <div style="color:#aaa;font-size:13px;margin-bottom:10px">🏅 Best Scores</div>${br}
@@ -848,22 +781,41 @@ function draw(){
     const acc=G.ta>0?Math.round(G.tc/G.ta*100):0;
     const isPractice=G.mode==="practice";
     const isMarathon=G.mode==="marathon";
-      const won=G.winner==="player";
+    const isSudden=G.mode==="sudden";
+    const won=G.winner==="player";
     let emoji,title,subtitle;
     if(isPractice){emoji="📚";title="Practice Done!";subtitle=`${G.tc} questions answered`;}
     else if(isMarathon&&G.winner==="out"){emoji="💔";title="3 Strikes!";subtitle="Better luck next time!";}
-    else if(isSuddenMode()&&G.winner==="sudden"){emoji="💀";title="Eliminated!";subtitle="One wrong answer ended it!";}
+    else if(isSudden&&G.winner==="sudden"){emoji="💀";title="Eliminated!";subtitle="One wrong answer ended it!";}
     else if(won){emoji="🏆";title="YOU WIN!";subtitle="Amazing! 🎉";}
     else{emoji="💨";title="CPU WINS!";subtitle="Better luck next time! 💪";}
     const modeLabel=MODES[G.mode].label;
-    const showRetryAd=!won&&!isPractice&&!G.premium;
+    const nStars=acc>=90?3:acc>=70?2:acc>=40?1:0;
+    let scene="";
+    if(won){scene=`<div class="podium-scene">
+        <div class="pd-trophy">🏆</div>
+        <div class="pd-car">${carBackSVG(G.car,86)}</div>
+        <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);display:flex;align-items:flex-end;gap:2px">
+          <div style="width:64px;height:44px;background:linear-gradient(180deg,#8d99ae,#5f6b7d);border-radius:6px 6px 0 0;display:flex;align-items:center;justify-content:center;font-size:18px;color:#dfe6ee">2</div>
+          <div style="width:72px;height:74px;background:linear-gradient(180deg,#ffd700,#c79200);border-radius:6px 6px 0 0;display:flex;align-items:center;justify-content:center;font-size:24px;color:#7a5800">1</div>
+          <div style="width:64px;height:32px;background:linear-gradient(180deg,#b08d57,#7d6134);border-radius:6px 6px 0 0;display:flex;align-items:center;justify-content:center;font-size:16px;color:#eadbc2">3</div>
+        </div>
+      </div>`;}
+    else if(G.winner==="cpu"){scene=`<div class="podium-scene" style="height:110px">
+        <div style="position:absolute;left:50%;bottom:6px;width:86px;margin-left:-43px;transform:rotate(-4deg);filter:saturate(.55) brightness(.85)">${carBackSVG(G.car,86)}</div>
+        <div class="smoke" style="left:38%;bottom:64px;width:14px;height:14px"></div>
+        <div class="smoke" style="left:50%;bottom:70px;width:18px;height:18px;animation-delay:.5s"></div>
+        <div class="smoke" style="left:60%;bottom:62px;width:12px;height:12px;animation-delay:1s"></div>
+      </div>`;}
+    const starRow=[0,1,2].map(i=>`<span class="star-pop" style="animation-delay:${.25+i*.3}s;opacity:0;${i<nStars?"":"filter:grayscale(1) opacity(.3)"}">⭐</span>`).join("");
     app.innerHTML=`<div style="width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center">
-      <div style="font-size:68px">${emoji}</div>
+      ${scene||`<div style="font-size:68px">${emoji}</div>`}
       <h1 style="color:${won||isPractice?CL.g:CL.no};font-size:40px;margin:6px 0;text-shadow:0 0 22px ${won||isPractice?"#ffd70088":"#ff444488"}">${title}</h1>
-      <p class="nunito" style="color:#888;font-size:14px;margin-bottom:14px">${subtitle}</p>
-      ${G.newBest?`<div style="color:${CL.g};font-size:15px;margin-bottom:6px">🌟 New Personal Best!</div>`:""}
+      <p class="nunito" style="color:#888;font-size:14px;margin-bottom:8px">${subtitle}</p>
+      ${!isPractice?`<div style="margin-bottom:10px">${starRow}</div>`:""}
+      ${G.newBest?`<div class="best-glow" style="color:${CL.g};font-size:16px;margin-bottom:8px;animation-delay:1s">🌟 NEW PERSONAL BEST! 🌟</div>`:""}
       <div class="card" style="text-align:center;margin-bottom:16px;padding:14px 26px">
-        <div style="color:${CL.g};font-size:28px;margin-bottom:4px">⭐ ${G.score} pts</div>
+        <div style="color:${CL.g};font-size:28px;margin-bottom:4px">⭐ <span id="scoreVal">0</span> pts</div>
         <div class="nunito" style="color:#ccc;font-size:13px;line-height:2">
           Accuracy: ${acc}% · ${G.tc}/${G.ta} correct<br/>
           Best streak: 🔥${G.maxStreak} · ${modeLabel}
@@ -871,29 +823,27 @@ function draw(){
           <br/><span style="font-size:11px;color:#666">${G.car.e} ${G.car.n}</span>
         </div>
       </div>
-      ${showRetryAd?`<button onclick="watchAdForRetry()" style="width:100%;background:linear-gradient(135deg,#1a1a3e,#2a2560);border:2px solid #ffd70055;border-radius:14px;padding:11px 0;font-size:15px;margin-bottom:10px">
-        📺 Watch ad to try again
-      </button>`:""}
       <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
         <button class="btn" style="background:linear-gradient(135deg,#00c853,#00695c)" onclick="startGame()">🔄 Again</button>
         <button class="btn" style="background:linear-gradient(135deg,#4a3fa0,#302b63);border:2px solid ${CL.g}44" onclick="set({screen:'lb'})">🏆 Board</button>
         <button class="btn" style="background:linear-gradient(135deg,#4a3fa0,#302b63);border:2px solid ${CL.p}44" onclick="set({screen:'menu'})">🏠 Menu</button>
       </div>
-      ${!G.premium?`<button onclick="showPaywall('result')" style="background:transparent;border:none;color:${CL.g};font-size:13px;margin-top:14px">⭐ Remove ads & unlock all — $1.99</button>`:""}
-    </div>`;
+          </div>`;
+    const svEl=document.getElementById("scoreVal");
+    if(svEl){const target=G.score;if(target<=0){svEl.textContent=0;}else{let s=0;const step=Math.max(1,Math.ceil(target/45));const iv=setInterval(()=>{s+=step;if(s>=target){s=target;clearInterval(iv);}svEl.textContent=s;},20);}}
   }
 
   // ── PLAYING ────────────────────────────────────────────────────────────────
   else if(G.screen==="playing"){
     const isPractice=G.mode==="practice";
     const isMarathon=G.mode==="marathon";
-      const showCPU=!isPractice&&!isMarathon&&!isSuddenMode();
+    const isSudden=G.mode==="sudden";
+    const showCPU=!isPractice&&!isMarathon;
     const dk=isMarathon?G.marathonDiff:G.diff;
     const d=DIFF[dk];
-    const potPts=G.tl>0&&!isPractice?Math.max(1,Math.round((G.tl/(isSuddenMode()?10:d.time))*MXPT))*(G.streak>=3?2:1):MXPT;
+    const potPts=G.tl>0&&!isPractice?Math.max(1,Math.round((G.tl/d.time)*MXPT))*(G.streak>=3?2:1):MXPT;
     const ansBtns=G.q?G.q.ch.map(c=>abtn(c,G.as[c]||null)).join(""):"";
     const modeColor=MODES[G.mode].color;
-    const bottomPad=!G.premium&&!isPractice?"padding-bottom:70px":"";
 
     const quitOv=G.showQuit?`<div class="overlay"><div style="background:linear-gradient(135deg,#1a1a3e,#2a2560);border-radius:24px;padding:28px 24px;max-width:320px;width:100%;text-align:center;border:2px solid ${CL.no}66">
       <div style="font-size:42px;margin-bottom:6px">🚨</div>
@@ -906,75 +856,53 @@ function draw(){
     </div></div>`:"";
 
     let statusRight="";
-    if(isMarathon) statusRight=`<div style="display:flex;gap:4px;align-items:center">${livesHTML(G.lives)}${!G.premium?`<span onclick="watchAdForLife()" style="font-size:11px;color:${CL.g};cursor:pointer;margin-left:4px;font-family:'Nunito',sans-serif">+❤️</span>`:""}</div>`;
-    else if(isSuddenMode()) statusRight=`<div style="color:#ff4444;font-size:12px;font-family:'Nunito',sans-serif">☠️ ${G.qCount}/50</div>`;
+    if(isMarathon) statusRight=`<div style="display:flex;gap:4px;align-items:center">${livesHTML(G.lives)}</div>`;
+    else if(isSudden) statusRight=`<div style="color:#ff4444;font-size:12px;font-family:'Nunito',sans-serif">☠️ One chance!</div>`;
     else statusRight=`<div style="color:${G.streak>=3?"#ff6b35":"#666"};font-size:18px">🔥 ×${G.streak}</div>`;
 
-    app.innerHTML=`${quitOv}<div style="width:100%;max-width:500px;${bottomPad}">
+    const countOv=(G.counting!=null)?`<div class="overlay" style="background:#000000bb"><div class="count-num" style="font-size:${G.counting>0?120:88}px;color:${G.counting>0?"#ffd700":"#00ff88"};text-shadow:0 0 44px currentColor">${G.counting>0?G.counting:"GO!"}</div></div>`:"";
+    app.innerHTML=`${countOv}${quitOv}<div style="width:100%;max-width:500px">
       <div class="flex-between" style="margin-bottom:10px">
         <button onclick="set({showQuit:true})" style="background:#1a1a3e;border:2px solid #4a3fa066;border-radius:12px;width:38px;height:38px;font-size:18px" class="flex-center">🏠</button>
-        <div style="color:${CL.g};font-size:18px">⭐ ${G.score}</div>
+        <div style="display:flex;align-items:center;gap:6px"><span style="line-height:0">${mascotSVG()}</span><span style="color:${CL.g};font-size:18px">⭐ ${G.score}</span></div>
         <div class="nunito" style="color:${modeColor};font-size:11px">${MODES[G.mode].icon} ${MODES[G.mode].label}${isMarathon?` · ${d.label}`:""}</div>
         ${statusRight}
       </div>
-      ${showCPU?track(G.ppos,CL.p,"YOU",G.car.e,false):""}
-      ${showCPU?track(G.cpos,CL.c,"CPU",G.cpuCar,true):""}
-      ${showCPU?`<div class="nunito" style="display:flex;justify-content:space-between;color:#555;font-size:11px;margin-bottom:12px;margin-top:2px">
-        <span style="color:${CL.p}">You ${Math.round(G.ppos)}%</span><span>🏁 100%</span><span style="color:${CL.c}">CPU ${Math.round(G.cpos)}%</span>
+      <div id="roadWrap" class="${G.streak>=5?"zoom-pulse":""}">
+        <canvas id="rc"></canvas>
+        ${showCPU?`<div id="cpuCar" style="display:none">${carBackSVG({...CPU_SPEC},68)}</div><div id="cpuChip" class="nunito"></div>`:""}
+        <div id="pcar">${carBackSVG(G.car,96)}</div>
+      </div>
+      ${!isPractice&&!isMarathon?`<div class="prog">
+        <div class="prog-f" style="width:${G.ppos}%"></div>
+        ${showCPU?`<div class="prog-cpu" id="cpuMark" style="left:${Math.min(99,G.cpos)}%"></div>`:""}
+        <div class="prog-flag">🏁</div>
+      </div>`:""}
+      ${showCPU?`<div class="nunito" id="raceStatus" style="text-align:center;color:${G.ppos>G.cpos?CL.ok:G.cpos>G.ppos?CL.no:"#888"};font-size:12px;margin-bottom:8px">${G.ppos>G.cpos?"🚀 You're ahead!":G.cpos>G.ppos?"⚠️ CPU is catching up!":"⚡ Neck and neck!"}</div>`:""}
+      ${!isPractice?`<div class="gauge ${G.streak>=3?"gauge-max":""}">
+        <span style="font-size:14px">🔥</span>
+        <div class="gauge-bar"><div class="gauge-f" style="width:${Math.min(3,G.streak)/3*100}%"></div></div>
+        <span class="gauge-tag nunito">${G.streak>=3?"2× BOOST!":"streak "+G.streak+"/3"}</span>
       </div>`:""}
       ${isPractice?`<div style="text-align:center;margin-bottom:12px"><div style="color:#00c9a7;font-size:28px">📚 ${G.tc}</div><div class="nunito" style="color:#888;font-size:12px">answered correctly</div></div>`:""}
       ${isMarathon?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:10px 14px;background:#1a1a3e;border-radius:14px;border:1px solid #a855f733">
         <div><div style="color:#a855f7;font-size:13px">Level: ${d.label}</div><div class="nunito" style="color:#666;font-size:11px">Next in ${5-(G.tc%5)} correct</div></div>
         <div style="display:flex;gap:4px;align-items:center">${livesHTML(G.lives)}</div>
       </div>`:""}
-      ${G.q?`<div class="card" style="padding:16px 16px 14px">
+      ${G.q?`<div class="card" style="padding:16px 16px 14px;${!G.qAnimDone?(G.qAnimDone=true,"animation:cardIn .28s ease"):""}">
         ${!isPractice?tbar(G.tl,d.time):""}
         ${!isPractice?`<div class="nunito" style="display:flex;justify-content:center;gap:16px;color:${G.tl===0?CL.no:"#666"};font-size:12px;margin-bottom:6px">
           <span>${G.tl>0?`⏱ ${G.tl}s`:"⏱ Time's up!"}</span>
           ${G.tl>0?`<span style="color:${CL.g}">⭐ up to ${potPts} pts</span>`:""}
-          ${isSuddenMode()?`<span style="color:#ff4444">💀 No mistakes!</span>`:""}
+          ${isSudden?`<span style="color:#ff4444">💀 No mistakes!</span>`:""}
         </div>`:""}
         <div style="text-align:center;font-size:34px;margin:6px 0 14px;letter-spacing:1px">${G.q.text}</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:8px">${ansBtns}</div>
-        ${G.showNext?`<button onclick="nextQ()" style="width:100%;margin-top:6px;background:linear-gradient(135deg,#f7971e,#c0392b);border:none;border-radius:12px;padding:12px 0;font-size:18px;cursor:pointer">Next Question →</button>`:""}
         ${isPractice?`<button onclick="nextQ()" style="width:100%;margin-top:8px;background:linear-gradient(135deg,#00c9a7,#005f56);border:none;border-radius:12px;padding:12px 0;font-size:18px;cursor:pointer">Next →</button>`:""}
         ${G.streak>=3&&!G.showNext&&!isPractice?`<div class="nunito" style="text-align:center;color:#ff6b35;margin-top:6px;font-size:13px">🔥 ${G.streak} streak — 2× boost!</div>`:""}
       </div>`:""}
     </div>`;
   }
-}
-
-
-// ── Global Leaderboard ────────────────────────────────────────────────────────
-async function loadGlobalLb(){
-  G.lbGlobal=true;G.globalLbData=null;draw();
-  await loadGlobalLbData();
-}
-
-async function loadGlobalLbData(){
-  try{
-    if(!window.Capacitor||!window.Capacitor.isNativePlatform())return;
-    // Use localStorage as shared storage key for global scores
-    const key='mathracer_global_lb_'+G.lbTab;
-    const stored=localStorage.getItem(key);
-    const data=stored?JSON.parse(stored):[];
-    G.globalLbData=data.sort((a,b)=>b.score-a.score).slice(0,10);
-    draw();
-  }catch(e){console.warn('Global LB error:',e);G.globalLbData=[];draw();}
-}
-
-async function submitToGlobalLb(score,accuracy,diff){
-  try{
-    if(!window.Capacitor||!window.Capacitor.isNativePlatform())return;
-    const key='mathracer_global_lb_'+diff;
-    const stored=localStorage.getItem(key);
-    const data=stored?JSON.parse(stored):[];
-    // Add this score
-    data.push({name:G.pname,score,accuracy,car:G.car.e,date:new Date().toLocaleDateString(),diff});
-    // Keep top 100
-    data.sort((a,b)=>b.score-a.score);
-    localStorage.setItem(key,JSON.stringify(data.slice(0,100)));
-  }catch(e){console.warn('Submit global LB error:',e);}
 }
 
 draw();
@@ -987,9 +915,7 @@ draw();
       splash.classList.add('fade-out');
       setTimeout(function(){ splash.style.display='none'; }, 800);
     }
-    // Initialize AdMob + request GDPR consent after splash
-    initAdMobWithConsent();
-    initRevenueCat();
+
   }, 2200);
 })();
 
